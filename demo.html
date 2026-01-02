@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Team Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Transitions */
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Glass Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(99, 102, 241, 0.5);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex">
+
+    <!-- Background Orbs -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col items-center xl:items-start gap-6 transition-all duration-300 h-screen flex-shrink-0 z-50">
+        <div class="flex items-center gap-3 px-2 mb-2 w-full justify-center xl:justify-start">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                <i data-lucide="zap" class="text-white fill-white w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block tracking-tight">
+                Lumina
+            </span>
+        </div>
+
+        <div class="flex flex-col gap-2 w-full flex-1 overflow-y-auto no-scrollbar pr-1">
+            <!-- Nav Item Template -->
+            <button onclick="navigateTo('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group bg-indigo-600 text-white shadow-lg shadow-indigo-600/20">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 flex-shrink-0 transition-transform scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">Dashboard</span>
+            </button>
+
+            <button onclick="navigateTo('finance')" id="nav-finance" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                <i data-lucide="trending-up" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">Finance</span>
+            </button>
+
+            <button onclick="navigateTo('mywork')" id="nav-mywork" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                <i data-lucide="kanban-square" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">My Work</span>
+            </button>
+
+            <button onclick="navigateTo('worklog')" id="nav-worklog" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                <i data-lucide="notebook-pen" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">Daily Log</span>
+            </button>
+
+            <button onclick="navigateTo('files')" id="nav-files" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                <i data-lucide="folder-open" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">Company Files</span>
+            </button>
+
+            <button onclick="navigateTo('passwords')" id="nav-passwords" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                <i data-lucide="lock" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">IDs & Passwords</span>
+            </button>
+            
+            <button onclick="navigateTo('monitoring')" id="nav-monitoring" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300">
+                <i data-lucide="activity" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                <span class="text-sm font-medium hidden xl:block truncate">Monitoring</span>
+            </button>
+
+            <button onclick="navigateTo('chats')" id="nav-chats" class="nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto">
+                <div class="relative">
+                    <i data-lucide="message-square" class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"></i>
+                    <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-[#0a0a0c]"></span>
+                </div>
+                <span class="text-sm font-medium hidden xl:block truncate">Chats</span>
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-4 w-full px-1 pb-2 mt-4 border-t border-white/5 pt-4">
+             <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors group">
+                <img src="https://ui-avatars.com/api/?name=Jane+Doe&background=6366f1&color=fff" class="w-10 h-10 rounded-full border border-white/10" alt="User">
+                <div class="hidden xl:block overflow-hidden">
+                    <p class="text-sm font-medium text-white truncate">Jane Doe</p>
+                    <p class="text-xs text-slate-500 truncate">Senior Developer</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <!-- Header -->
+        <header class="flex-shrink-0 h-20 px-8 flex items-center justify-between border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-sm z-10">
+            <div>
+                <h1 id="page-title" class="text-2xl font-bold text-white tracking-tight">Overview</h1>
+                <p id="date-text" class="text-xs text-slate-500 mt-1">Today is...</p>
+            </div>
+            <div class="flex items-center gap-4">
+                 <div class="relative hidden md:block">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4"></i>
+                    <input type="text" placeholder="Search..." class="bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/50 w-64 text-slate-200 placeholder-slate-600">
+                </div>
+                <div class="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div id="content-area" class="flex-1 overflow-y-auto p-8 scroll-smooth no-scrollbar">
+            <!-- Injected via JS -->
+        </div>
+    </main>
+
+    <!-- JS Logic -->
+    <script>
+        // --- State Management ---
+        const state = {
+            currentView: 'dashboard',
+            weather: { temp: null, condition: 'Clear', aqi: null },
+            tasks: JSON.parse(localStorage.getItem('tasks')) || [
+                { id: 1, title: 'Design System Update', status: 'In Progress', priority: 'High' },
+                { id: 2, title: 'Q1 Financial Report', status: 'Todo', priority: 'Medium' },
+            ],
+            logs: JSON.parse(localStorage.getItem('logs')) || [],
+            messages: [
+                { id: 1, sender: 'Alex M.', text: 'Reviewing the PR now.', time: '10:45 AM', unread: true },
+                { id: 2, sender: 'Sarah K.', text: 'Lunch at 1?', time: '09:15 AM', unread: false }
+            ]
+        };
+
+        // --- Init ---
+        function init() {
+            lucide.createIcons();
+            fetchWeatherData();
+            updateClock();
+            setInterval(updateClock, 1000);
+            navigateTo('dashboard');
+        }
+
+        // --- Navigation ---
+        function navigateTo(viewId) {
+            state.currentView = viewId;
+            
+            // Update Sidebar UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300";
+                const icon = btn.querySelector('i');
+                if(icon) icon.classList.remove('scale-110');
+            });
+            
+            const activeBtn = document.getElementById(`nav-${viewId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-btn flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group bg-indigo-600 text-white shadow-lg shadow-indigo-600/20";
+                const icon = activeBtn.querySelector('i');
+                if(icon) icon.classList.add('scale-110');
+            }
+
+            const container = document.getElementById('content-area');
+            const title = document.getElementById('page-title');
+            
+            // Animation reset
+            container.innerHTML = '';
+            container.classList.remove('fade-in');
+            void container.offsetWidth;
+            container.classList.add('fade-in');
+
+            // Render
+            switch(viewId) {
+                case 'dashboard': renderDashboard(container); title.innerText = "Dashboard Overview"; break;
+                case 'finance': renderFinance(container); title.innerText = "Financial Overview"; break;
+                case 'mywork': renderMyWork(container); title.innerText = "My Tasks"; break;
+                case 'worklog': renderWorkLog(container); title.innerText = "Daily Work Log"; break;
+                case 'files': renderFiles(container); title.innerText = "Company Files"; break;
+                case 'passwords': renderPasswords(container); title.innerText = "Security Vault"; break;
+                case 'chats': renderChats(container); title.innerText = "Communications"; break;
+                case 'monitoring': renderMonitoring(container); title.innerText = "System Monitoring"; break;
+            }
+            lucide.createIcons();
+        }
+
+        // --- Data Fetchers ---
+        async function fetchWeatherData() {
+            try {
+                // Weather
+                const weatherRes = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m,is_day&timezone=auto');
+                const weatherData = await weatherRes.json();
+                state.weather.temp = weatherData.current.temperature_2m;
+
+                // AQI (Delhi Coordinates)
+                const aqiRes = await fetch('https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.6139&longitude=77.2090&current=us_aqi&timezone=auto');
+                const aqiData = await aqiRes.json();
+                state.weather.aqi = aqiData.current.us_aqi;
+
+                // Update UI if dashboard is active
+                if(state.currentView === 'dashboard') {
+                    renderDashboard(document.getElementById('content-area'));
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            document.getElementById('date-text').innerText = dateStr;
+            
+            const clockEl = document.getElementById('dash-clock');
+            if(clockEl) {
+                clockEl.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        // --- Helpers for AQI ---
+        function getAqiInfo(aqi) {
+            if (!aqi && aqi !== 0) return { color: 'text-slate-400', hex: '#94a3b8', status: 'Loading...', msg: 'Fetching data...', icon: 'loader-2' };
+            if (aqi <= 50) return { color: 'text-emerald-400', hex: '#34d399', status: 'Good', msg: 'Air is healthy.', icon: 'check-circle-2' };
+            if (aqi <= 100) return { color: 'text-yellow-400', hex: '#facc15', status: 'Moderate', msg: 'Acceptable quality.', icon: 'minus-circle' };
+            if (aqi <= 150) return { color: 'text-orange-400', hex: '#fb923c', status: 'Sensitive', msg: 'Sensitive groups: reduce outdoor activity.', icon: 'alert-triangle' };
+            if (aqi <= 200) return { color: 'text-rose-500', hex: '#f43f5e', status: 'Unhealthy', msg: 'Wear a mask outdoors. Reduce exertion.', icon: 'alert-octagon' };
+            if (aqi <= 300) return { color: 'text-purple-500', hex: '#a855f7', status: 'Very Unhealthy', msg: 'Mask mandatory. Avoid outdoors.', icon: 'skull' };
+            return { color: 'text-red-700', hex: '#b91c1c', status: 'Hazardous', msg: 'Emergency conditions. Stay inside.', icon: 'skull' };
+        }
+
+        // --- Renderers ---
+
+        function renderDashboard(container) {
+            const aqiInfo = getAqiInfo(state.weather.aqi);
+            const aqiPercent = state.weather.aqi ? Math.min((state.weather.aqi / 300) * 100, 100) : 0;
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Weather Card -->
+                    <div class="lg:col-span-1 glass-panel rounded-[32px] p-8 flex flex-col justify-between group hover:bg-white/[0.05] transition-all relative overflow-hidden h-72">
+                        <div class="flex justify-between items-start z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500 group-hover:scale-110 transition-transform">
+                                <i data-lucide="sun" class="w-6 h-6"></i>
+                            </div>
+                            <div class="text-right">
+                                <p id="dash-clock" class="text-4xl font-light text-white leading-none tracking-tighter">--:--</p>
+                                <p class="text-slate-500 text-xs mt-1 uppercase tracking-widest">Delhi, IN</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-auto z-10">
+                             <div class="flex items-end gap-1 mb-4">
+                                <span id="dash-temp" class="text-6xl font-bold text-white">${state.weather.temp ? Math.round(state.weather.temp) : '--'}°</span>
+                                <span class="text-slate-400 text-xl mb-3">C</span>
+                            </div>
+                            
+                            <!-- AQI Meter -->
+                            <div class="bg-black/40 rounded-xl p-3 border border-white/5 backdrop-blur-sm">
+                                <div class="flex justify-between items-center mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="wind" class="w-3 h-3 text-slate-400"></i>
+                                        <span class="text-xs text-slate-300 font-bold uppercase tracking-wider">Air Quality</span>
+                                    </div>
+                                    <span class="${aqiInfo.color} font-bold text-sm">${state.weather.aqi || '--'} US AQI</span>
+                                </div>
+                                
+                                <!-- Bar -->
+                                <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-2">
+                                    <div class="h-full rounded-full transition-all duration-1000 ease-out" style="width: ${aqiPercent}%; background-color: ${aqiInfo.hex}"></div>
+                                </div>
+                                
+                                <div class="flex items-start gap-2">
+                                    <i data-lucide="${aqiInfo.icon}" class="w-3.5 h-3.5 mt-0.5 ${aqiInfo.color} shrink-0"></i>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-slate-200 leading-tight">${aqiInfo.status}</p>
+                                        <p class="text-[10px] leading-tight text-slate-400 mt-0.5">${aqiInfo.msg}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/20 blur-[60px] rounded-full"></div>
+                    </div>
+
+                    <!-- Progress Card -->
+                    <div class="lg:col-span-2 glass-panel rounded-[32px] p-8 relative overflow-hidden group h-72 flex flex-col justify-center">
+                         <div class="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-600/10 to-transparent"></div>
+                         <div class="relative z-10">
+                            <h2 class="text-2xl font-semibold text-white mb-2">Weekly Goal Progress</h2>
+                            <p class="text-slate-400 mb-6">You have completed <span class="text-indigo-400 font-bold">14 tasks</span> this week. Keep up the momentum!</p>
+                            <div class="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+                                <div class="h-full w-[70%] bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>
+                            </div>
+                            <div class="flex justify-between mt-3 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <span>70% Complete</span>
+                                <span>Target: 20</span>
+                            </div>
+                         </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="glass-panel p-6 rounded-3xl border-l-4 border-indigo-500">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-2">Total Revenue</p>
+                            <h3 class="text-2xl font-bold text-white">$42,500</h3>
+                        </div>
+                        <div class="glass-panel p-6 rounded-3xl border-l-4 border-emerald-500">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-2">Active Projects</p>
+                            <h3 class="text-2xl font-bold text-white">8</h3>
+                        </div>
+                        <div class="glass-panel p-6 rounded-3xl border-l-4 border-rose-500">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-2">Pending Tasks</p>
+                            <h3 class="text-2xl font-bold text-white">${state.tasks.filter(t => t.status !== 'Done').length}</h3>
+                        </div>
+                        <div class="glass-panel p-6 rounded-3xl border-l-4 border-amber-500">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-2">Team Online</p>
+                            <h3 class="text-2xl font-bold text-white">5/12</h3>
+                        </div>
+                    </div>
+                </div>
+            `;
+            setTimeout(updateClock, 0); 
+            lucide.createIcons(); // Ensure new icons render
+        }
+
+        function renderFinance(container) {
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-6 rounded-3xl bg-emerald-500/5 border-emerald-500/20">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-emerald-400 text-sm font-medium mb-1">Total Income</p>
+                                <h3 class="text-3xl font-bold text-white">$124,500</h3>
+                            </div>
+                            <div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
+                        </div>
+                        <p class="text-emerald-500/60 text-xs mt-4">+12% from last month</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl bg-rose-500/5 border-rose-500/20">
+                         <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-rose-400 text-sm font-medium mb-1">Expenses</p>
+                                <h3 class="text-3xl font-bold text-white">$32,100</h3>
+                            </div>
+                            <div class="p-2 bg-rose-500/20 rounded-lg text-rose-400"><i data-lucide="trending-down" class="w-6 h-6"></i></div>
+                        </div>
+                        <p class="text-rose-500/60 text-xs mt-4">+5% from last month</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl bg-indigo-500/5 border-indigo-500/20">
+                         <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-indigo-400 text-sm font-medium mb-1">Net Profit</p>
+                                <h3 class="text-3xl font-bold text-white">$92,400</h3>
+                            </div>
+                            <div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-400"><i data-lucide="wallet" class="w-6 h-6"></i></div>
+                        </div>
+                        <p class="text-indigo-500/60 text-xs mt-4">Healthy Margin</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-3xl mb-8">
+                    <h3 class="text-lg font-bold text-white mb-6">Revenue Flow</h3>
+                    <div class="h-64 w-full">
+                        <canvas id="financeChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl overflow-hidden">
+                    <div class="p-6 border-b border-white/5">
+                        <h3 class="font-bold text-white">Recent Transactions</h3>
+                    </div>
+                    <table class="w-full text-left text-sm text-slate-400">
+                        <thead class="bg-white/5 text-xs uppercase font-semibold text-slate-500">
+                            <tr>
+                                <th class="px-6 py-4">Description</th>
+                                <th class="px-6 py-4">Date</th>
+                                <th class="px-6 py-4">Amount</th>
+                                <th class="px-6 py-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5">
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">Client Payment #001</td>
+                                <td class="px-6 py-4">Jan 02, 2026</td>
+                                <td class="px-6 py-4 text-emerald-400">+$2,500.00</td>
+                                <td class="px-6 py-4"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs">Completed</span></td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">AWS Server Costs</td>
+                                <td class="px-6 py-4">Jan 01, 2026</td>
+                                <td class="px-6 py-4 text-slate-400">-$450.00</td>
+                                <td class="px-6 py-4"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                const ctx = document.getElementById('financeChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Income',
+                            data: [65, 59, 80, 81, 56, 95],
+                            backgroundColor: '#10b981',
+                            borderRadius: 6
+                        }, {
+                            label: 'Expense',
+                            data: [28, 48, 40, 19, 26, 27],
+                            backgroundColor: '#f43f5e',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                            x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                        },
+                        plugins: { legend: { labels: { color: '#e2e8f0' } } }
+                    }
+                });
+            }, 50);
+        }
+
+        function renderMyWork(container) {
+            const getTasks = (status) => state.tasks.filter(t => t.status === status);
+            const taskCard = (t) => `
+                <div class="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-2 relative z-10">
+                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-white/5 ${t.priority==='High'?'text-rose-400':'text-indigo-400'}">${t.priority}</span>
+                        <button onclick="deleteTask(${t.id})" class="text-slate-600 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <p class="text-sm font-medium text-slate-200 relative z-10">${t.title}</p>
+                </div>
+            `;
+
+            container.innerHTML = `
+                <div class="flex justify-between items-center mb-8">
+                    <p class="text-slate-400">Manage your tasks.</p>
+                    <button onclick="addNewTask()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Task
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-panel p-4 rounded-3xl min-h-[400px]">
+                        <h4 class="font-bold text-slate-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-slate-500"></div> To Do</h4>
+                        <div class="space-y-3">${getTasks('Todo').map(taskCard).join('')}</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-3xl min-h-[400px] bg-indigo-500/5 border-indigo-500/10">
+                        <h4 class="font-bold text-indigo-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> In Progress</h4>
+                         <div class="space-y-3">${getTasks('In Progress').map(taskCard).join('')}</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-3xl min-h-[400px] bg-emerald-500/5 border-emerald-500/10">
+                        <h4 class="font-bold text-emerald-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Done</h4>
+                         <div class="space-y-3">${getTasks('Done').map(taskCard).join('')}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderWorkLog(container) {
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="glass-panel p-6 rounded-3xl sticky top-0">
+                            <h3 class="font-bold text-lg text-white mb-6">New Log Entry</h3>
+                            <form onsubmit="submitLog(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-500 mb-1">Date</label>
+                                    <input type="date" id="logDate" required class="glass-input w-full rounded-xl p-3 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-500 mb-1">Hours</label>
+                                    <input type="number" id="logHours" step="0.5" required class="glass-input w-full rounded-xl p-3 text-sm" placeholder="e.g. 8">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-500 mb-1">Details</label>
+                                    <textarea id="logDesc" rows="4" required class="glass-input w-full rounded-xl p-3 text-sm" placeholder="What did you work on?"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20">Save Entry</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 space-y-4">
+                        <h3 class="font-bold text-lg text-white">History</h3>
+                        ${state.logs.length ? state.logs.map(l => `
+                            <div class="glass-panel p-5 rounded-2xl flex justify-between items-center group hover:bg-white/5 transition-all">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold text-white">${l.date}</span>
+                                        <span class="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-300 font-mono">${l.hours}h</span>
+                                    </div>
+                                    <p class="text-slate-400 text-sm">${l.description}</p>
+                                </div>
+                            </div>
+                        `).join('') : '<div class="p-8 text-center text-slate-500 border border-dashed border-white/10 rounded-2xl">No logs yet.</div>'}
+                    </div>
+                </div>
+            `;
+            setTimeout(() => { if(document.getElementById('logDate')) document.getElementById('logDate').valueAsDate = new Date(); }, 0);
+        }
+
+        function renderFiles(container) {
+            container.innerHTML = `
+                <div class="glass-panel rounded-3xl p-8 min-h-[600px]">
+                    <div class="flex justify-between items-center mb-8">
+                        <div class="flex items-center gap-2 text-sm text-slate-500">
+                            <span class="text-indigo-400 font-medium">Root</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span>Team Shared</span>
+                        </div>
+                        <button class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-xl transition-all flex items-center gap-2">
+                            <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                        ${['Marketing', 'Finance', 'Design', 'Legal'].map(name => `
+                            <div class="p-4 bg-white/5 border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 rounded-2xl cursor-pointer transition-all text-center group">
+                                <i data-lucide="folder" class="w-10 h-10 text-indigo-400 mx-auto mb-2 group-hover:scale-110 transition-transform"></i>
+                                <p class="text-sm font-medium text-slate-200">${name}</p>
+                                <p class="text-[10px] text-slate-500">12 items</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Files</h4>
+                    <div class="overflow-hidden rounded-2xl border border-white/5">
+                        <table class="w-full text-left text-sm text-slate-400">
+                             <thead class="bg-white/5 text-xs font-semibold text-slate-500">
+                                <tr>
+                                    <th class="px-4 py-3">Name</th>
+                                    <th class="px-4 py-3">Size</th>
+                                    <th class="px-4 py-3">Modified</th>
+                                    <th class="px-4 py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5 bg-black/20">
+                                <tr class="hover:bg-white/5 transition-colors group">
+                                    <td class="px-4 py-3 flex items-center gap-3 text-white font-medium">
+                                        <i data-lucide="file-text" class="text-rose-400 w-5 h-5"></i> Handbook_2026.pdf
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">4.2 MB</td>
+                                    <td class="px-4 py-3 text-slate-500">Jan 01</td>
+                                    <td class="px-4 py-3 text-right"><i data-lucide="more-horizontal" class="w-4 h-4 text-slate-600 hover:text-white cursor-pointer"></i></td>
+                                </tr>
+                                 <tr class="hover:bg-white/5 transition-colors group">
+                                    <td class="px-4 py-3 flex items-center gap-3 text-white font-medium">
+                                        <i data-lucide="sheet" class="text-emerald-400 w-5 h-5"></i> Q4_Data.xlsx
+                                    </td>
+                                    <td class="px-4 py-3 text-slate-500">1.8 MB</td>
+                                    <td class="px-4 py-3 text-slate-500">Dec 28</td>
+                                    <td class="px-4 py-3 text-right"><i data-lucide="more-horizontal" class="w-4 h-4 text-slate-600 hover:text-white cursor-pointer"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPasswords(container) {
+            container.innerHTML = `
+                <div class="glass-panel rounded-3xl overflow-hidden">
+                    <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-xl text-white">Vault</h3>
+                            <p class="text-sm text-slate-400">Secure shared credentials.</p>
+                        </div>
+                        <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm transition-all shadow-lg shadow-indigo-600/20">Add New</button>
+                    </div>
+                    <table class="w-full text-left text-sm text-slate-400">
+                        <thead class="bg-white/5 text-xs uppercase font-semibold text-slate-500">
+                            <tr>
+                                <th class="px-8 py-4">Service</th>
+                                <th class="px-8 py-4">Login</th>
+                                <th class="px-8 py-4">Password</th>
+                                <th class="px-8 py-4">Last Access</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 bg-black/20">
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-8 py-4 flex items-center gap-3 text-white font-medium">
+                                    <div class="w-8 h-8 rounded bg-white/10 flex items-center justify-center"><i data-lucide="cloud" class="w-4 h-4"></i></div> AWS
+                                </td>
+                                <td class="px-8 py-4 font-mono text-slate-500">admin@nexus.com</td>
+                                <td class="px-8 py-4 font-mono group cursor-pointer w-48">
+                                    <div class="relative overflow-hidden rounded bg-black/30 px-2 py-1">
+                                        <span class="blur-sm group-hover:blur-none transition-all select-all text-emerald-400">882_x#91!a</span>
+                                        <div class="absolute inset-0 flex items-center justify-center text-xs text-slate-500 group-hover:hidden bg-black/50 backdrop-blur-sm">Hover to reveal</div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-4 text-xs text-slate-600">2d ago</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-8 py-4 flex items-center gap-3 text-white font-medium">
+                                    <div class="w-8 h-8 rounded bg-white/10 flex items-center justify-center"><i data-lucide="slack" class="w-4 h-4"></i></div> Slack
+                                </td>
+                                <td class="px-8 py-4 font-mono text-slate-500">ops@nexus.com</td>
+                                <td class="px-8 py-4 font-mono group cursor-pointer w-48">
+                                    <div class="relative overflow-hidden rounded bg-black/30 px-2 py-1">
+                                        <span class="blur-sm group-hover:blur-none transition-all select-all text-emerald-400">sl_keys#29</span>
+                                        <div class="absolute inset-0 flex items-center justify-center text-xs text-slate-500 group-hover:hidden bg-black/50 backdrop-blur-sm">Hover to reveal</div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-4 text-xs text-slate-600">1m ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 p-4 border border-amber-500/20 bg-amber-500/5 rounded-xl flex items-start gap-3 text-amber-500/80 text-sm">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0"></i>
+                    <p>Security Alert: Access to this vault is logged. Do not copy credentials to unsecured locations.</p>
+                </div>
+            `;
+        }
+
+        function renderChats(container) {
+            container.innerHTML = `
+                <div class="flex h-[calc(100vh-180px)] gap-6">
+                    <div class="w-80 glass-panel rounded-3xl flex flex-col overflow-hidden">
+                        <div class="p-4 border-b border-white/5">
+                            <h3 class="font-bold text-white">Messages</h3>
+                        </div>
+                        <div class="flex-1 overflow-y-auto no-scrollbar">
+                            ${state.messages.map(m => `
+                                <div class="p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer ${m.unread ? 'bg-indigo-500/10' : ''}">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="font-bold text-sm text-slate-200">${m.sender}</span>
+                                        <span class="text-xs text-slate-500">${m.time}</span>
+                                    </div>
+                                    <p class="text-sm text-slate-400 truncate">${m.text}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="flex-1 glass-panel rounded-3xl flex flex-col overflow-hidden">
+                        <div class="p-4 border-b border-white/5 flex justify-between items-center bg-black/20">
+                            <h3 class="font-bold text-slate-200 flex items-center gap-2"><div class="w-2 h-2 bg-emerald-500 rounded-full"></div> Team General</h3>
+                        </div>
+                        <div class="flex-1 p-6 overflow-y-auto space-y-6">
+                            <div class="flex justify-center"><span class="text-xs bg-white/5 text-slate-500 px-3 py-1 rounded-full">Today</span></div>
+                            <div class="flex gap-4">
+                                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white">AM</div>
+                                <div>
+                                    <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 max-w-md">
+                                        Has anyone seen the new Figma files?
+                                    </div>
+                                    <span class="text-xs text-slate-600 mt-1 block">10:30 AM</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 flex-row-reverse">
+                                <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold text-white">JD</div>
+                                <div class="text-right">
+                                    <div class="bg-indigo-600 p-3 rounded-2xl rounded-tr-none text-sm text-white max-w-md text-left">
+                                        Just uploaded them to the Drive folder!
+                                    </div>
+                                    <span class="text-xs text-slate-600 mt-1 block">10:32 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-black/20 border-t border-white/5">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Type a message..." class="glass-input flex-1 rounded-xl px-4 py-2 text-sm">
+                                <button class="p-2 bg-indigo-600 rounded-xl text-white hover:bg-indigo-500 transition-colors"><i data-lucide="send" class="w-5 h-5"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMonitoring(container) {
+             container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-6 rounded-3xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">System Status</h4>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-1">99.9%</div>
+                        <p class="text-emerald-400 text-xs">All Systems Operational</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-3xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i>
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Server Load</h4>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-1">34%</div>
+                        <div class="h-1.5 w-full bg-white/10 rounded-full mt-2 overflow-hidden">
+                            <div class="h-full w-[34%] bg-indigo-500"></div>
+                        </div>
+                    </div>
+                     <div class="glass-panel p-6 rounded-3xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
+                            <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Active Users</h4>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-1">128</div>
+                        <p class="text-slate-500 text-xs">Currently Online</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8">
+                    <h3 class="font-bold text-white mb-6">Live Activity Feed</h3>
+                    <div class="space-y-8 relative before:absolute before:left-4 before:top-10 before:bottom-0 before:w-px before:bg-white/10">
+                        <div class="relative pl-10">
+                            <div class="absolute left-2 top-1 w-4 h-4 rounded-full bg-[#0a0a0c] border-2 border-emerald-500 z-10"></div>
+                            <p class="text-sm text-slate-300"><span class="font-bold text-white">Deployment Successful</span> - v2.4.0 deployed to production.</p>
+                            <p class="text-xs text-slate-600 mt-1">Just now</p>
+                        </div>
+                        <div class="relative pl-10">
+                            <div class="absolute left-2 top-1 w-4 h-4 rounded-full bg-[#0a0a0c] border-2 border-indigo-500 z-10"></div>
+                            <p class="text-sm text-slate-300"><span class="font-bold text-white">Database Backup</span> - Automated backup completed.</p>
+                            <p class="text-xs text-slate-600 mt-1">2 hours ago</p>
+                        </div>
+                         <div class="relative pl-10">
+                            <div class="absolute left-2 top-1 w-4 h-4 rounded-full bg-[#0a0a0c] border-2 border-amber-500 z-10"></div>
+                            <p class="text-sm text-slate-300"><span class="font-bold text-white">High Latency Alert</span> - US-East-1 region experiencing delays.</p>
+                            <p class="text-xs text-slate-600 mt-1">5 hours ago</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addNewTask() {
+            const t = prompt("Task Title:");
+            if(t) {
+                state.tasks.push({ id: Date.now(), title: t, status: 'Todo', priority: 'Medium' });
+                renderMyWork(document.getElementById('content-area'));
+            }
+        }
+        
+        function deleteTask(id) {
+            if(confirm("Delete task?")) {
+                state.tasks = state.tasks.filter(t => t.id !== id);
+                renderMyWork(document.getElementById('content-area'));
+            }
+        }
+
+        function submitLog(e) {
+            e.preventDefault();
+            const date = document.getElementById('logDate').value;
+            const hours = document.getElementById('logHours').value;
+            const desc = document.getElementById('logDesc').value;
+            state.logs.unshift({ date, hours, description: desc });
+            renderWorkLog(document.getElementById('content-area'));
+        }
+
+        // Run
+        window.onload = init;
+    </script>
+</body>
+</html>

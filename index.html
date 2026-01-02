@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lumina - Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Glass Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .glass-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex"
+  >
+    <div
+      class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"
+    >
+      <div
+        class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"
+      ></div>
+      <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"
+      ></div>
+    </div>
+
+    <nav
+      class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col items-center xl:items-start gap-6 transition-all duration-300 h-screen flex-shrink-0 z-50"
+    >
+      <div
+        class="flex items-center gap-3 px-2 mb-2 w-full justify-center xl:justify-start"
+      >
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0"
+        >
+          <i data-lucide="zap" class="text-white fill-white w-5 h-5"></i>
+        </div>
+        <span
+          class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block tracking-tight"
+        >
+          Lumina
+        </span>
+      </div>
+
+      <div
+        class="flex flex-col gap-2 w-full flex-1 overflow-y-auto no-scrollbar pr-1"
+      >
+        <a
+          href="index.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+        >
+          <i
+            data-lucide="layout-dashboard"
+            class="w-5 h-5 flex-shrink-0 scale-110"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block truncate"
+            >Dashboard</span
+          >
+        </a>
+
+        <a
+          href="finance.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+        >
+          <i
+            data-lucide="trending-up"
+            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block truncate"
+            >Finance</span
+          >
+        </a>
+
+        <a
+          href="mywork.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+        >
+          <i
+            data-lucide="kanban-square"
+            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block truncate"
+            >My Work</span
+          >
+        </a>
+
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+        >
+          <i
+            data-lucide="notebook-pen"
+            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block truncate"
+            >Daily Log</span
+          >
+        </a>
+
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+        >
+          <i
+            data-lucide="folder-open"
+            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block truncate"
+            >Company Files</span
+          >
+        </a>
+        <a
+          href="passwords.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="lock"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block"
+            >IDs & Passwords</span
+          ></a
+        >
+        <a
+          href="monitoring.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+        >
+          <i
+            data-lucide="activity"
+            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block truncate"
+            >Monitoring</span
+          >
+        </a>
+      </div>
+
+      <div
+        class="flex flex-col gap-4 w-full px-1 pb-2 mt-4 border-t border-white/5 pt-4"
+      >
+        <div
+          class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors group"
+        >
+          <img
+            src="https://ui-avatars.com/api/?name=Jane+Doe&background=6366f1&color=fff"
+            class="w-10 h-10 rounded-full border border-white/10"
+            alt="User"
+          />
+          <div class="hidden xl:block overflow-hidden">
+            <p class="text-sm font-medium text-white truncate">Jane Doe</p>
+            <p class="text-xs text-slate-500 truncate">Senior Developer</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <header
+        class="flex-shrink-0 h-20 px-8 flex items-center justify-between border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-sm z-10"
+      >
+        <div>
+          <h1 class="text-2xl font-bold text-white tracking-tight">Overview</h1>
+          <p id="date-text" class="text-xs text-slate-500 mt-1">
+            Loading date...
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative hidden md:block">
+            <i
+              data-lucide="search"
+              class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4"
+            ></i>
+            <input
+              type="text"
+              placeholder="Search..."
+              class="bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/50 w-64 text-slate-200 placeholder-slate-600"
+            />
+          </div>
+          <div
+            class="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400"
+          >
+            <i data-lucide="bell" class="w-5 h-5"></i>
+          </div>
+        </div>
+      </header>
+
+      <div
+        id="content-area"
+        class="flex-1 overflow-y-auto p-8 scroll-smooth no-scrollbar"
+      >
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div
+            class="lg:col-span-1 glass-panel rounded-[32px] p-8 flex flex-col justify-between group hover:bg-white/[0.05] transition-all relative overflow-hidden h-72"
+          >
+            <div class="flex justify-between items-start z-10">
+              <div
+                class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500 group-hover:scale-110 transition-transform"
+              >
+                <i data-lucide="sun" class="w-6 h-6"></i>
+              </div>
+              <div class="text-right">
+                <p
+                  id="dash-clock"
+                  class="text-4xl font-light text-white leading-none tracking-tighter"
+                >
+                  --:--
+                </p>
+                <p
+                  class="text-slate-500 text-xs mt-1 uppercase tracking-widest"
+                >
+                  Delhi, IN
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-auto z-10">
+              <div class="flex items-end gap-1 mb-4">
+                <span id="dash-temp" class="text-6xl font-bold text-white"
+                  >--°</span
+                >
+                <span class="text-slate-400 text-xl mb-3">C</span>
+              </div>
+
+              <div
+                class="bg-black/40 rounded-xl p-3 border border-white/5 backdrop-blur-sm"
+              >
+                <div class="flex justify-between items-center mb-2">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="wind" class="w-3 h-3 text-slate-400"></i>
+                    <span
+                      class="text-xs text-slate-300 font-bold uppercase tracking-wider"
+                      >Air Quality</span
+                    >
+                  </div>
+                  <span id="aqi-text" class="font-bold text-sm text-slate-400"
+                    >-- US AQI</span
+                  >
+                </div>
+
+                <div
+                  class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-2"
+                >
+                  <div
+                    id="aqi-bar"
+                    class="h-full rounded-full transition-all duration-1000 ease-out bg-slate-500"
+                    style="width: 0%"
+                  ></div>
+                </div>
+
+                <div class="flex items-start gap-2">
+                  <i
+                    id="aqi-icon"
+                    data-lucide="loader-2"
+                    class="w-3.5 h-3.5 mt-0.5 text-slate-400 shrink-0"
+                  ></i>
+                  <div>
+                    <p
+                      id="aqi-status"
+                      class="text-[11px] font-bold text-slate-200 leading-tight"
+                    >
+                      Loading...
+                    </p>
+                    <p
+                      id="aqi-msg"
+                      class="text-[10px] leading-tight text-slate-400 mt-0.5"
+                    >
+                      Fetching data...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/20 blur-[60px] rounded-full"
+            ></div>
+          </div>
+
+          <div
+            class="lg:col-span-2 glass-panel rounded-[32px] p-8 relative overflow-hidden group h-72 flex flex-col justify-center"
+          >
+            <div
+              class="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-600/10 to-transparent"
+            ></div>
+            <div class="relative z-10">
+              <h2 class="text-2xl font-semibold text-white mb-2">
+                Weekly Goal Progress
+              </h2>
+              <p class="text-slate-400 mb-6">
+                You have completed
+                <span class="text-indigo-400 font-bold">14 tasks</span> this
+                week. Keep up the momentum!
+              </p>
+              <div
+                class="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5"
+              >
+                <div
+                  class="h-full w-[70%] bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                ></div>
+              </div>
+              <div
+                class="flex justify-between mt-3 text-xs font-bold text-slate-500 uppercase tracking-wider"
+              >
+                <span>70% Complete</span>
+                <span>Target: 20</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div
+              class="glass-panel p-6 rounded-3xl border-l-4 border-indigo-500"
+            >
+              <p class="text-slate-500 text-xs font-bold uppercase mb-2">
+                Total Revenue
+              </p>
+              <h3 class="text-2xl font-bold text-white">$42,500</h3>
+            </div>
+            <div
+              class="glass-panel p-6 rounded-3xl border-l-4 border-emerald-500"
+            >
+              <p class="text-slate-500 text-xs font-bold uppercase mb-2">
+                Active Projects
+              </p>
+              <h3 class="text-2xl font-bold text-white">8</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-3xl border-l-4 border-rose-500">
+              <p class="text-slate-500 text-xs font-bold uppercase mb-2">
+                Pending Tasks
+              </p>
+              <h3 class="text-2xl font-bold text-white">4</h3>
+            </div>
+            <div
+              class="glass-panel p-6 rounded-3xl border-l-4 border-amber-500"
+            >
+              <p class="text-slate-500 text-xs font-bold uppercase mb-2">
+                Team Online
+              </p>
+              <h3 class="text-2xl font-bold text-white">5/12</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Init Icons
+      lucide.createIcons();
+
+      // Time and Date Logic
+      function updateClock() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        });
+        document.getElementById("date-text").innerText = dateStr;
+
+        const clockEl = document.getElementById("dash-clock");
+        if (clockEl) {
+          clockEl.innerText = now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      // Weather & AQI Logic
+      async function fetchWeatherData() {
+        try {
+          // Weather
+          const weatherRes = await fetch(
+            "https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m,is_day&timezone=auto"
+          );
+          const weatherData = await weatherRes.json();
+          const temp = weatherData.current.temperature_2m;
+          document.getElementById("dash-temp").innerText =
+            Math.round(temp) + "°";
+
+          // AQI
+          const aqiRes = await fetch(
+            "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.6139&longitude=77.2090&current=us_aqi&timezone=auto"
+          );
+          const aqiData = await aqiRes.json();
+          const aqi = aqiData.current.us_aqi;
+          updateAqiUI(aqi);
+        } catch (e) {
+          console.error("Weather fetch failed", e);
+        }
+      }
+
+      function updateAqiUI(aqi) {
+        const info = getAqiInfo(aqi);
+        const percent = Math.min((aqi / 300) * 100, 100);
+
+        document.getElementById("aqi-text").innerText = `${aqi} US AQI`;
+        document.getElementById(
+          "aqi-text"
+        ).className = `font-bold text-sm ${info.color}`;
+
+        const bar = document.getElementById("aqi-bar");
+        bar.style.width = `${percent}%`;
+        bar.style.backgroundColor = info.hex;
+
+        const icon = document.getElementById("aqi-icon");
+        icon.setAttribute("data-lucide", info.icon);
+        icon.className = `w-3.5 h-3.5 mt-0.5 ${info.color} shrink-0`;
+
+        document.getElementById("aqi-status").innerText = info.status;
+        document.getElementById("aqi-msg").innerText = info.msg;
+
+        lucide.createIcons(); // Refresh icon
+      }
+
+      function getAqiInfo(aqi) {
+        if (!aqi && aqi !== 0)
+          return {
+            color: "text-slate-400",
+            hex: "#94a3b8",
+            status: "Loading...",
+            msg: "Fetching data...",
+            icon: "loader-2",
+          };
+        if (aqi <= 50)
+          return {
+            color: "text-emerald-400",
+            hex: "#34d399",
+            status: "Good",
+            msg: "Air is healthy.",
+            icon: "check-circle-2",
+          };
+        if (aqi <= 100)
+          return {
+            color: "text-yellow-400",
+            hex: "#facc15",
+            status: "Moderate",
+            msg: "Acceptable quality.",
+            icon: "minus-circle",
+          };
+        if (aqi <= 150)
+          return {
+            color: "text-orange-400",
+            hex: "#fb923c",
+            status: "Sensitive",
+            msg: "Sensitive groups: reduce outdoor activity.",
+            icon: "alert-triangle",
+          };
+        if (aqi <= 200)
+          return {
+            color: "text-rose-500",
+            hex: "#f43f5e",
+            status: "Unhealthy",
+            msg: "Wear a mask outdoors.",
+            icon: "alert-octagon",
+          };
+        if (aqi <= 300)
+          return {
+            color: "text-purple-500",
+            hex: "#a855f7",
+            status: "Very Unhealthy",
+            msg: "Mask mandatory.",
+            icon: "skull",
+          };
+        return {
+          color: "text-red-700",
+          hex: "#b91c1c",
+          status: "Hazardous",
+          msg: "Emergency conditions.",
+          icon: "skull",
+        };
+      }
+
+      fetchWeatherData();
+    </script>
+  </body>
+</html>

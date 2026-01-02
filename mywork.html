@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina - My Work</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex">
+    
+    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"><div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div><div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div></div>
+
+    <nav class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col gap-6 h-screen z-50">
+        <div class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start">
+             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"><i data-lucide="zap" class="text-white fill-white w-5 h-5"></i></div>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block">Lumina</span>
+        </div>
+        <div class="flex flex-col gap-2 flex-1 overflow-y-auto">
+            <a href="index.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="layout-dashboard" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Dashboard</span></a>
+            <a href="finance.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="trending-up" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Finance</span></a>
+            <a href="mywork.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 transition-all"><i data-lucide="kanban-square" class="w-5 h-5 scale-110"></i><span class="text-sm font-medium hidden xl:block">My Work</span></a>
+            <a href="worklog.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="notebook-pen" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Daily Log</span></a>
+            <a href="files.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="folder-open" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Company Files</span></a>
+            <a href="passwords.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="lock" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">IDs & Passwords</span></a>
+            <a href="monitoring.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="activity" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Monitoring</span></a>
+            <a href="chats.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto transition-all group"><i data-lucide="message-square" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Chats</span></a>
+        </div>
+    </nav>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="h-20 px-8 flex items-center justify-between border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-sm">
+            <h1 class="text-2xl font-bold text-white">Task Board</h1>
+             <button onclick="addNewTask()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/20">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add Task
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 fade-in">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Columns will be injected by JS -->
+                <div class="glass-panel p-4 rounded-3xl min-h-[400px]">
+                    <h4 class="font-bold text-slate-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-slate-500"></div> To Do</h4>
+                    <div id="col-todo" class="space-y-3"></div>
+                </div>
+                <div class="glass-panel p-4 rounded-3xl min-h-[400px] bg-indigo-500/5 border-indigo-500/10">
+                    <h4 class="font-bold text-indigo-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> In Progress</h4>
+                    <div id="col-inprogress" class="space-y-3"></div>
+                </div>
+                <div class="glass-panel p-4 rounded-3xl min-h-[400px] bg-emerald-500/5 border-emerald-500/10">
+                    <h4 class="font-bold text-emerald-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Done</h4>
+                    <div id="col-done" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        lucide.createIcons();
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+            { id: 1, title: 'Design System Update', status: 'In Progress', priority: 'High' },
+            { id: 2, title: 'Q1 Financial Report', status: 'Todo', priority: 'Medium' }
+        ];
+
+        function render() {
+            const card = (t) => `
+                <div class="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-2 relative z-10">
+                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-white/5 ${t.priority==='High'?'text-rose-400':'text-indigo-400'}">${t.priority}</span>
+                        <button onclick="deleteTask(${t.id})" class="text-slate-600 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                    <p class="text-sm font-medium text-slate-200 relative z-10">${t.title}</p>
+                </div>`;
+            
+            document.getElementById('col-todo').innerHTML = tasks.filter(t=>t.status==='Todo').map(card).join('');
+            document.getElementById('col-inprogress').innerHTML = tasks.filter(t=>t.status==='In Progress').map(card).join('');
+            document.getElementById('col-done').innerHTML = tasks.filter(t=>t.status==='Done').map(card).join('');
+            lucide.createIcons();
+        }
+
+        window.addNewTask = () => {
+            const t = prompt("Task Title:");
+            if(t) { tasks.push({ id: Date.now(), title: t, status: 'Todo', priority: 'Medium' }); localStorage.setItem('tasks', JSON.stringify(tasks)); render(); }
+        }
+        window.deleteTask = (id) => {
+            if(confirm("Delete?")) { tasks = tasks.filter(t=>t.id!==id); localStorage.setItem('tasks', JSON.stringify(tasks)); render(); }
+        }
+        render();
+    </script>
+</body>
+</html>
