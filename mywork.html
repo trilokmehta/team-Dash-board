@@ -6,6 +6,7 @@
     <title>Lumina - My Work</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -45,10 +46,11 @@
 
         <div class="flex-1 overflow-y-auto p-8 fade-in">
              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Columns will be injected by JS -->
                 <div class="glass-panel p-4 rounded-3xl min-h-[400px]">
                     <h4 class="font-bold text-slate-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-slate-500"></div> To Do</h4>
-                    <div id="col-todo" class="space-y-3"></div>
+                    <div id="col-todo" class="space-y-3">
+                        <div class="text-center text-slate-500 text-sm mt-10">Loading...</div>
+                    </div>
                 </div>
                 <div class="glass-panel p-4 rounded-3xl min-h-[400px] bg-indigo-500/5 border-indigo-500/10">
                     <h4 class="font-bold text-indigo-400 mb-4 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> In Progress</h4>
@@ -61,37 +63,74 @@
             </div>
         </div>
     </main>
-    <script>
-        lucide.createIcons();
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [
-            { id: 1, title: 'Design System Update', status: 'In Progress', priority: 'High' },
-            { id: 2, title: 'Q1 Financial Report', status: 'Todo', priority: 'Medium' }
-        ];
 
-        function render() {
+    <script>
+        // --- 1. CONFIGURATION ---
+        const SUPABASE_URL = 'https://jwrgsmluqhqlxizsuyzc.supabase.co';
+        // Note: I cleaned up the key you provided (it was repeated twice).
+        const SUPABASE_KEY = 'sb_publishable_cmmex6QtxyXxodgdLdsJnQ_X6BmijWo'; 
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        lucide.createIcons();
+
+        // --- 2. RENDER LOGIC ---
+        function renderTasks(tasks) {
             const card = (t) => `
                 <div class="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group relative overflow-hidden">
                     <div class="flex justify-between items-start mb-2 relative z-10">
                         <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-white/5 ${t.priority==='High'?'text-rose-400':'text-indigo-400'}">${t.priority}</span>
-                        <button onclick="deleteTask(${t.id})" class="text-slate-600 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <div class="flex gap-2">
+                             ${t.status !== 'Done' ? `<button onclick="updateStatus(${t.id}, '${getNextStatus(t.status)}')" class="text-slate-600 hover:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="arrow-right-circle" class="w-4 h-4"></i></button>` : ''}
+                             <button onclick="deleteTask(${t.id})" class="text-slate-600 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
                     </div>
                     <p class="text-sm font-medium text-slate-200 relative z-10">${t.title}</p>
                 </div>`;
             
-            document.getElementById('col-todo').innerHTML = tasks.filter(t=>t.status==='Todo').map(card).join('');
-            document.getElementById('col-inprogress').innerHTML = tasks.filter(t=>t.status==='In Progress').map(card).join('');
-            document.getElementById('col-done').innerHTML = tasks.filter(t=>t.status==='Done').map(card).join('');
+            document.getElementById('col-todo').innerHTML = tasks.filter(t=>t.status==='Todo').map(card).join('') || '<p class="text-slate-600 text-xs text-center py-4">No tasks</p>';
+            document.getElementById('col-inprogress').innerHTML = tasks.filter(t=>t.status==='In Progress').map(card).join('') || '<p class="text-slate-600 text-xs text-center py-4">No tasks</p>';
+            document.getElementById('col-done').innerHTML = tasks.filter(t=>t.status==='Done').map(card).join('') || '<p class="text-slate-600 text-xs text-center py-4">No tasks</p>';
             lucide.createIcons();
         }
 
-        window.addNewTask = () => {
+        function getNextStatus(current) {
+            if(current === 'Todo') return 'In Progress';
+            if(current === 'In Progress') return 'Done';
+            return 'Done';
+        }
+
+        // --- 3. DATABASE FUNCTIONS ---
+        async function fetchTasks() {
+            const { data, error } = await supabase.from('tasks').select('*').order('created_at', { ascending: false });
+            if (error) console.error('Error fetching tasks:', error);
+            else renderTasks(data);
+        }
+
+        window.addNewTask = async () => {
             const t = prompt("Task Title:");
-            if(t) { tasks.push({ id: Date.now(), title: t, status: 'Todo', priority: 'Medium' }); localStorage.setItem('tasks', JSON.stringify(tasks)); render(); }
+            if(t) { 
+                const { error } = await supabase.from('tasks').insert([{ title: t, status: 'Todo', priority: 'Medium' }]);
+                if(error) alert('Error adding task');
+                else fetchTasks(); 
+            }
         }
-        window.deleteTask = (id) => {
-            if(confirm("Delete?")) { tasks = tasks.filter(t=>t.id!==id); localStorage.setItem('tasks', JSON.stringify(tasks)); render(); }
+
+        window.updateStatus = async (id, newStatus) => {
+            const { error } = await supabase.from('tasks').update({ status: newStatus }).eq('id', id);
+            if(error) alert('Error updating status');
+            else fetchTasks();
         }
-        render();
+
+        window.deleteTask = async (id) => {
+            if(confirm("Delete this task?")) { 
+                const { error } = await supabase.from('tasks').delete().eq('id', id);
+                if(error) alert('Error deleting task');
+                else fetchTasks();
+            }
+        }
+
+        // Initial Load
+        fetchTasks();
     </script>
 </body>
 </html>

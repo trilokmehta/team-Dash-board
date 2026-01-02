@@ -6,6 +6,7 @@
     <title>Lumina - Work Log</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -57,41 +58,69 @@
                 </div>
                 <div class="lg:col-span-2 space-y-4">
                     <h3 class="font-bold text-lg text-white">History</h3>
-                    <div id="log-list"></div>
+                    <div id="log-list">
+                        <div class="text-center text-slate-500 mt-10">Loading logs...</div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
     <script>
+        // --- 1. CONFIGURATION ---
+        const SUPABASE_URL = 'https://jwrgsmluqhqlxizsuyzc.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_cmmex6QtxyXxodgdLdsJnQ_X6BmijWo'; 
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         lucide.createIcons();
         document.getElementById('logDate').valueAsDate = new Date();
-        let logs = JSON.parse(localStorage.getItem('logs')) || [];
 
-        function render() {
+        // --- 2. LOGIC ---
+        function renderLogs(logs) {
             const container = document.getElementById('log-list');
-            if(logs.length === 0) { container.innerHTML = '<div class="p-8 text-center text-slate-500 border border-dashed border-white/10 rounded-2xl">No logs yet.</div>'; return; }
+            if(!logs || logs.length === 0) { 
+                container.innerHTML = '<div class="p-8 text-center text-slate-500 border border-dashed border-white/10 rounded-2xl">No logs yet.</div>'; 
+                return; 
+            }
             
             container.innerHTML = logs.map(l => `
                 <div class="glass-panel p-5 rounded-2xl flex justify-between items-center group hover:bg-white/5 transition-all">
                     <div>
-                        <div class="flex items-center gap-2 mb-1"><span class="font-bold text-white">${l.date}</span><span class="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-300 font-mono">${l.hours}h</span></div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="font-bold text-white">${l.date}</span>
+                            <span class="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-300 font-mono">${l.hours}h</span>
+                        </div>
                         <p class="text-slate-400 text-sm">${l.description}</p>
                     </div>
                 </div>`).join('');
         }
 
-        window.submitLog = (e) => {
+        async function fetchLogs() {
+            const { data, error } = await supabase.from('work_logs').select('*').order('date', { ascending: false });
+            if (error) console.error('Error:', error);
+            else renderLogs(data);
+        }
+
+        window.submitLog = async (e) => {
             e.preventDefault();
             const date = document.getElementById('logDate').value;
             const hours = document.getElementById('logHours').value;
-            const desc = document.getElementById('logDesc').value;
-            logs.unshift({ date, hours, description: desc });
-            localStorage.setItem('logs', JSON.stringify(logs));
-            render();
-            e.target.reset();
-            document.getElementById('logDate').valueAsDate = new Date();
+            const description = document.getElementById('logDesc').value;
+
+            // Submit to Supabase
+            const { error } = await supabase.from('work_logs').insert([{ date, hours, description }]);
+            
+            if(error) {
+                alert('Error adding log');
+                console.error(error);
+            } else {
+                e.target.reset();
+                document.getElementById('logDate').valueAsDate = new Date();
+                fetchLogs(); // Refresh list
+            }
         }
-        render();
+
+        // Initial Load
+        fetchLogs();
     </script>
 </body>
 </html>
