@@ -66,15 +66,17 @@
         </div>
     </main>
     <script>
-        // --- 1. CONFIGURATION ---
+        // --- 1. RENDER ICONS FIRST ---
+        lucide.createIcons();
+
+        // --- 2. CONFIGURATION ---
         const SUPABASE_URL = 'https://jwrgsmluqhqlxizsuyzc.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_cmmex6QtxyXxodgdLdsJnQ_X6BmijWo'; 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        lucide.createIcons();
         document.getElementById('logDate').valueAsDate = new Date();
 
-        // --- 2. LOGIC ---
+        // --- 3. LOGIC ---
         function renderLogs(logs) {
             const container = document.getElementById('log-list');
             if(!logs || logs.length === 0) { 

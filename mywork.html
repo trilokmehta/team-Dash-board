@@ -65,15 +65,16 @@
     </main>
 
     <script>
-        // --- 1. CONFIGURATION ---
+        // --- 1. RENDER ICONS FIRST ---
+        // This ensures icons show up even if the database connects slowly
+        lucide.createIcons();
+
+        // --- 2. CONFIGURATION ---
         const SUPABASE_URL = 'https://jwrgsmluqhqlxizsuyzc.supabase.co';
-        // Note: I cleaned up the key you provided (it was repeated twice).
         const SUPABASE_KEY = 'sb_publishable_cmmex6QtxyXxodgdLdsJnQ_X6BmijWo'; 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        lucide.createIcons();
-
-        // --- 2. RENDER LOGIC ---
+        // --- 3. RENDER LOGIC ---
         function renderTasks(tasks) {
             const card = (t) => `
                 <div class="p-4 bg-white/5 rounded-xl border border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group relative overflow-hidden">
@@ -90,6 +91,8 @@
             document.getElementById('col-todo').innerHTML = tasks.filter(t=>t.status==='Todo').map(card).join('') || '<p class="text-slate-600 text-xs text-center py-4">No tasks</p>';
             document.getElementById('col-inprogress').innerHTML = tasks.filter(t=>t.status==='In Progress').map(card).join('') || '<p class="text-slate-600 text-xs text-center py-4">No tasks</p>';
             document.getElementById('col-done').innerHTML = tasks.filter(t=>t.status==='Done').map(card).join('') || '<p class="text-slate-600 text-xs text-center py-4">No tasks</p>';
+            
+            // Re-run icons for newly added tasks
             lucide.createIcons();
         }
 
@@ -99,7 +102,7 @@
             return 'Done';
         }
 
-        // --- 3. DATABASE FUNCTIONS ---
+        // --- 4. DATABASE FUNCTIONS ---
         async function fetchTasks() {
             const { data, error } = await supabase.from('tasks').select('*').order('created_at', { ascending: false });
             if (error) console.error('Error fetching tasks:', error);
