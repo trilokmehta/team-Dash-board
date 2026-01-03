@@ -1,72 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lumina - Chats</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; }
-        .glass-input:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(99, 102, 241, 0.5); outline: none; }
-        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .glass-input {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+      .glass-input:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(99, 102, 241, 0.5);
+        outline: none;
+      }
+      .fade-in {
+        animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Hide scrollbar for clean UI */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
     </style>
-</head>
-<body class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex">
-    
-    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"><div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div><div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div></div>
+  </head>
+  <body
+    class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex"
+  >
+    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
+      <div
+        class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"
+      ></div>
+      <div
+        class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"
+      ></div>
+    </div>
 
-    <nav class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col gap-6 h-screen z-50">
-        <div class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start">
-             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"><i data-lucide="zap" class="text-white fill-white w-5 h-5"></i></div>
-            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block">Lumina</span>
+    <nav
+      class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col gap-6 h-screen z-50"
+    >
+      <div
+        class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start"
+      >
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"
+        >
+          <i data-lucide="zap" class="text-white fill-white w-5 h-5"></i>
         </div>
-        <div class="flex flex-col gap-2 flex-1 overflow-y-auto">
-            <a href="index.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="layout-dashboard" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Dashboard</span></a>
-            <a href="finance.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="trending-up" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Finance</span></a>
-            <a href="mywork.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="kanban-square" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">My Work</span></a>
-            <a href="worklog.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="notebook-pen" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Daily Log</span></a>
-            <a href="files.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="folder-open" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Company Files</span></a>
-            <a href="passwords.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="lock" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">IDs & Passwords</span></a>
-            <a href="monitoring.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="activity" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Monitoring</span></a>
-            <a href="chats.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 mt-auto transition-all"><i data-lucide="message-square" class="w-5 h-5 scale-110"></i><span class="text-sm font-medium hidden xl:block">Chats</span></a>
-        </div>
+        <span
+          class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block"
+          >Lumina</span
+        >
+      </div>
+      <div class="flex flex-col gap-2 flex-1 overflow-y-auto">
+        <a
+          href="index.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="layout-dashboard"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block">Dashboard</span></a
+        >
+        <a
+          href="finance.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="trending-up"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block">Finance</span></a
+        >
+        <a
+          href="mywork.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="kanban-square"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block">My Work</span></a
+        >
+        <a
+          href="worklog.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="notebook-pen"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block">Daily Log</span></a
+        >
+        <a
+          href="files.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="folder-open"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block"
+            >Company Files</span
+          ></a
+        >
+        <a
+          href="passwords.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="lock"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block"
+            >IDs & Passwords</span
+          ></a
+        >
+        <a
+          href="monitoring.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
+          ><i
+            data-lucide="activity"
+            class="w-5 h-5 group-hover:scale-110 transition-transform"
+          ></i
+          ><span class="text-sm font-medium hidden xl:block"
+            >Monitoring</span
+          ></a
+        >
+        <a
+          href="chats.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 mt-auto transition-all"
+          ><i data-lucide="message-square" class="w-5 h-5 scale-110"></i
+          ><span class="text-sm font-medium hidden xl:block">Chats</span></a
+        >
+      </div>
     </nav>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
-        <header class="h-20 px-8 flex items-center justify-between border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-sm">
-            <h1 class="text-2xl font-bold text-white">Communications</h1>
-        </header>
+      <header
+        class="h-20 px-8 flex items-center justify-between border-b border-white/5 bg-[#0a0a0c]/80 backdrop-blur-sm"
+      >
+        <h1 class="text-2xl font-bold text-white">Communications</h1>
+      </header>
 
-        <div class="flex-1 overflow-y-auto p-8 fade-in">
-             <div class="flex h-[calc(100vh-180px)] gap-6">
-                <div class="w-80 glass-panel rounded-3xl flex flex-col overflow-hidden">
-                    <div class="p-4 border-b border-white/5"><h3 class="font-bold text-white">Messages</h3></div>
-                    <div class="flex-1 overflow-y-auto no-scrollbar">
-                         <div class="p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer bg-indigo-500/10"><div class="flex justify-between mb-1"><span class="font-bold text-sm text-slate-200">Alex M.</span><span class="text-xs text-slate-500">10:45 AM</span></div><p class="text-sm text-slate-400 truncate">Reviewing the PR now.</p></div>
-                         <div class="p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer"><div class="flex justify-between mb-1"><span class="font-bold text-sm text-slate-200">Sarah K.</span><span class="text-xs text-slate-500">09:15 AM</span></div><p class="text-sm text-slate-400 truncate">Lunch at 1?</p></div>
-                    </div>
-                </div>
-                <div class="flex-1 glass-panel rounded-3xl flex flex-col overflow-hidden">
-                    <div class="p-4 border-b border-white/5 flex justify-between items-center bg-black/20"><h3 class="font-bold text-slate-200 flex items-center gap-2"><div class="w-2 h-2 bg-emerald-500 rounded-full"></div> Team General</h3></div>
-                    <div class="flex-1 p-6 overflow-y-auto space-y-6">
-                        <div class="flex justify-center"><span class="text-xs bg-white/5 text-slate-500 px-3 py-1 rounded-full">Today</span></div>
-                        <div class="flex gap-4"><div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white">AM</div><div><div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 max-w-md">Has anyone seen the new Figma files?</div><span class="text-xs text-slate-600 mt-1 block">10:30 AM</span></div></div>
-                        <div class="flex gap-4 flex-row-reverse"><div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold text-white">JD</div><div class="text-right"><div class="bg-indigo-600 p-3 rounded-2xl rounded-tr-none text-sm text-white max-w-md text-left">Just uploaded them to the Drive folder!</div><span class="text-xs text-slate-600 mt-1 block">10:32 AM</span></div></div>
-                    </div>
-                    <div class="p-4 bg-black/20 border-t border-white/5">
-                        <div class="flex gap-2"><input type="text" placeholder="Type a message..." class="glass-input flex-1 rounded-xl px-4 py-2 text-sm"><button class="p-2 bg-indigo-600 rounded-xl text-white hover:bg-indigo-500 transition-colors"><i data-lucide="send" class="w-5 h-5"></i></button></div>
-                    </div>
-                </div>
+      <div class="flex-1 overflow-y-auto p-8 fade-in">
+        <div class="flex h-[calc(100vh-180px)] gap-6">
+          <div
+            class="w-80 glass-panel rounded-3xl flex flex-col overflow-hidden hidden md:flex"
+          >
+            <div class="p-4 border-b border-white/5">
+              <h3 class="font-bold text-white">Direct Messages</h3>
             </div>
+            <div class="flex-1 overflow-y-auto no-scrollbar">
+              <div
+                class="p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer bg-indigo-500/10"
+              >
+                <div class="flex justify-between mb-1">
+                  <span class="font-bold text-sm text-slate-200"
+                    >Team General</span
+                  ><span class="text-xs text-slate-500">Now</span>
+                </div>
+                <p class="text-sm text-slate-400 truncate text-indigo-300">
+                  Active Channel
+                </p>
+              </div>
+              <div
+                class="p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer opacity-50"
+              >
+                <div class="flex justify-between mb-1">
+                  <span class="font-bold text-sm text-slate-200">Sarah K.</span
+                  ><span class="text-xs text-slate-500">09:15 AM</span>
+                </div>
+                <p class="text-sm text-slate-400 truncate">Lunch at 1?</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex-1 glass-panel rounded-3xl flex flex-col overflow-hidden relative"
+          >
+            <div
+              class="p-4 border-b border-white/5 flex justify-between items-center bg-black/20 z-10"
+            >
+              <h3 class="font-bold text-slate-200 flex items-center gap-2">
+                <div
+                  class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"
+                ></div>
+                Team General
+              </h3>
+            </div>
+
+            <div
+              id="messages-container"
+              class="flex-1 p-6 overflow-y-auto space-y-6 scroll-smooth"
+            >
+              <div class="flex justify-center">
+                <span
+                  class="text-xs bg-white/5 text-slate-500 px-3 py-1 rounded-full"
+                  >Loading history...</span
+                >
+              </div>
+            </div>
+
+            <div class="p-4 bg-black/20 border-t border-white/5 z-10">
+              <form onsubmit="sendMessage(event)" class="flex gap-2">
+                <input
+                  id="message-input"
+                  type="text"
+                  placeholder="Type a message..."
+                  class="glass-input flex-1 rounded-xl px-4 py-3 text-sm"
+                  autocomplete="off"
+                />
+                <button
+                  type="submit"
+                  class="p-3 bg-indigo-600 rounded-xl text-white hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-600/20"
+                >
+                  <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
+      </div>
     </main>
-    <script>
-        lucide.createIcons();
-    </script>
-</body>
+
+<script>
+  // 1. Initialize Icons
+  lucide.createIcons();
+
+  // 2. Supabase Config
+  const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
+
+  // Renamed to chatClient to avoid 'supabase' naming conflict
+  if (!window.chatClient) {
+      window.chatClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+
+  // 3. Variables
+  const container = document.getElementById("messages-container");
+  const input = document.getElementById("message-input");
+  const MY_NAME = "Jane Doe"; // Hardcoded user for this demo
+
+  // 4. Render Function
+  function renderMessage(msg) {
+    const isMe = msg.is_me || msg.sender === MY_NAME;
+    const time = new Date(msg.created_at).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    // Generate initials safely
+    const initials = msg.sender
+      ? msg.sender.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase()
+      : "??";
+
+    let html = "";
+
+    if (isMe) {
+      html = `
+            <div class="flex gap-4 flex-row-reverse fade-in">
+                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-indigo-500/30 flex-shrink-0">${initials}</div>
+                <div class="text-right max-w-[80%]">
+                    <div class="bg-indigo-600 p-3 rounded-2xl rounded-tr-none text-sm text-white text-left shadow-md break-words">${msg.content}</div>
+                    <span class="text-[10px] text-slate-500 mt-1 block mr-1">${time}</span>
+                </div>
+            </div>`;
+    } else {
+      html = `
+            <div class="flex gap-4 fade-in">
+                <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-purple-500/30 flex-shrink-0">${initials}</div>
+                <div class="max-w-[80%]">
+                    <div class="flex items-baseline gap-2 mb-1 ml-1">
+                        <span class="text-xs font-bold text-slate-300">${msg.sender}</span>
+                    </div>
+                    <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 shadow-md border border-white/5 break-words">${msg.content}</div>
+                    <span class="text-[10px] text-slate-500 mt-1 block ml-1">${time}</span>
+                </div>
+            </div>`;
+    }
+    return html;
+  }
+
+  function scrollToBottom() {
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // 6. Fetch Initial History
+  async function fetchMessages() {
+    try {
+      const { data, error } = await window.chatClient
+        .from("messages")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(50);
+
+      if (error) throw error;
+
+      container.innerHTML = ""; 
+      container.innerHTML += '<div class="flex justify-center mb-4"><span class="text-xs bg-white/5 text-slate-500 px-3 py-1 rounded-full border border-white/5">History</span></div>';
+
+      if (data) {
+          data.forEach((msg) => {
+            container.innerHTML += renderMessage(msg);
+          });
+      }
+      scrollToBottom();
+    } catch (err) {
+      console.error("Error fetching messages:", err.message);
+      container.innerHTML = '<div class="text-center text-rose-500 text-sm mt-4">Failed to load chat history.</div>';
+    }
+  }
+
+  // 7. Subscribe to Realtime Updates
+  window.chatClient
+    .channel("public:messages")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "messages" },
+      (payload) => {
+        const newMsg = payload.new;
+        container.innerHTML += renderMessage(newMsg);
+        scrollToBottom();
+      }
+    )
+    .subscribe();
+
+  // 8. Send Message Function
+  window.sendMessage = async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = "";
+
+    const { error } = await window.chatClient.from("messages").insert([
+      {
+        sender: MY_NAME,
+        content: text,
+        is_me: true,
+      },
+    ]);
+
+    if (error) {
+      alert("Error sending message: " + error.message);
+      input.value = text;
+    }
+  }
+
+  // 9. Initial Load
+  fetchMessages();
+</script>
+  </body>
 </html>

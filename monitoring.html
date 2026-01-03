@@ -6,6 +6,7 @@
     <title>Lumina - Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -17,21 +18,21 @@
 <body class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex">
     
     <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"><div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div><div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div></div>
-
+    
     <nav class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col gap-6 h-screen z-50">
-        <div class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start">
-             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"><i data-lucide="zap" class="text-white fill-white w-5 h-5"></i></div>
+       <div class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"><i data-lucide="zap" class="text-white fill-white w-5 h-5"></i></div>
             <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block">Lumina</span>
         </div>
         <div class="flex flex-col gap-2 flex-1 overflow-y-auto">
-            <a href="index.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="layout-dashboard" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Dashboard</span></a>
-            <a href="finance.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="trending-up" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Finance</span></a>
-            <a href="mywork.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="kanban-square" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">My Work</span></a>
-            <a href="worklog.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="notebook-pen" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Daily Log</span></a>
-            <a href="files.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="folder-open" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Company Files</span></a>
-            <a href="passwords.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="lock" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">IDs & Passwords</span></a>
-            <a href="monitoring.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 transition-all"><i data-lucide="activity" class="w-5 h-5 scale-110"></i><span class="text-sm font-medium hidden xl:block">Monitoring</span></a>
-            <a href="chats.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto transition-all group"><i data-lucide="message-square" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Chats</span></a>
+            <a href="index.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Dashboard</span></a>
+            <a href="finance.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="trending-up" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Finance</span></a>
+            <a href="mywork.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="kanban-square" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">My Work</span></a>
+            <a href="worklog.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="notebook-pen" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Daily Log</span></a>
+            <a href="files.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="folder-open" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Company Files</span></a>
+            <a href="passwords.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="lock" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">IDs & Passwords</span></a>
+            <a href="monitoring.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"><i data-lucide="activity" class="w-5 h-5 scale-110"></i><span class="text-sm font-medium hidden xl:block">Monitoring</span></a>
+            <a href="chats.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto transition-all"><i data-lucide="message-square" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Chats</span></a>
         </div>
     </nav>
 
@@ -43,36 +44,109 @@
         <div class="flex-1 overflow-y-auto p-8 fade-in">
              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="glass-panel p-6 rounded-3xl">
-                    <div class="flex items-center gap-2 mb-4"><div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div><h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">System Status</h4></div>
-                    <div class="text-3xl font-bold text-white mb-1">99.9%</div><p class="text-emerald-400 text-xs">All Systems Operational</p>
+                    <div class="flex items-center gap-2 mb-4"><div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div><h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Database</h4></div>
+                    <div class="text-3xl font-bold text-white mb-1">Online</div><p class="text-emerald-400 text-xs">Supabase Connected</p>
                 </div>
                 <div class="glass-panel p-6 rounded-3xl">
-                    <div class="flex items-center gap-2 mb-4"><i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i><h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Server Load</h4></div>
-                    <div class="text-3xl font-bold text-white mb-1">34%</div><div class="h-1.5 w-full bg-white/10 rounded-full mt-2 overflow-hidden"><div class="h-full w-[34%] bg-indigo-500"></div></div>
+                    <div class="flex items-center gap-2 mb-4"><i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i><h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Events</h4></div>
+                    <div id="total-events" class="text-3xl font-bold text-white mb-1">...</div><div class="h-1.5 w-full bg-white/10 rounded-full mt-2 overflow-hidden"><div class="h-full w-[100%] bg-indigo-500"></div></div>
                 </div>
                  <div class="glass-panel p-6 rounded-3xl">
-                    <div class="flex items-center gap-2 mb-4"><i data-lucide="users" class="w-4 h-4 text-purple-400"></i><h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Active Users</h4></div>
-                    <div class="text-3xl font-bold text-white mb-1">128</div><p class="text-slate-500 text-xs">Currently Online</p>
+                    <div class="flex items-center gap-2 mb-4"><i data-lucide="users" class="w-4 h-4 text-purple-400"></i><h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Team</h4></div>
+                    <div class="text-3xl font-bold text-white mb-1">Active</div><p class="text-slate-500 text-xs">Based on Logs</p>
                 </div>
             </div>
 
             <div class="glass-panel rounded-3xl p-8">
-                <h3 class="font-bold text-white mb-6">Live Activity Feed</h3>
-                <div class="space-y-8 relative before:absolute before:left-4 before:top-10 before:bottom-0 before:w-px before:bg-white/10">
-                    <div class="relative pl-10">
-                        <div class="absolute left-2 top-1 w-4 h-4 rounded-full bg-[#0a0a0c] border-2 border-emerald-500 z-10"></div>
-                        <p class="text-sm text-slate-300"><span class="font-bold text-white">Deployment Successful</span> - v2.4.0 deployed to production.</p><p class="text-xs text-slate-600 mt-1">Just now</p>
-                    </div>
-                    <div class="relative pl-10">
-                        <div class="absolute left-2 top-1 w-4 h-4 rounded-full bg-[#0a0a0c] border-2 border-indigo-500 z-10"></div>
-                        <p class="text-sm text-slate-300"><span class="font-bold text-white">Database Backup</span> - Automated backup completed.</p><p class="text-xs text-slate-600 mt-1">2 hours ago</p>
-                    </div>
+                <h3 class="font-bold text-white mb-6">Live Activity Feed (Tasks, Finance, Logs)</h3>
+                <div id="activity-feed" class="space-y-8 relative before:absolute before:left-4 before:top-10 before:bottom-0 before:w-px before:bg-white/10">
+                    <div class="pl-10 text-slate-500">Loading live feed...</div>
                 </div>
             </div>
         </div>
     </main>
-    <script>
-        lucide.createIcons();
-    </script>
+<script>
+    // --- 1. RENDER ICONS ---
+    lucide.createIcons();
+
+    // --- 2. CONFIGURATION ---
+    const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
+
+    // Using window.monitorClient to avoid 'supabase' naming conflict
+    if (!window.monitorClient) {
+        window.monitorClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+
+    // --- 3. LOGIC ---
+    async function fetchFeed() {
+       try {
+           // Fetch recent items from multiple tables simultaneously
+           const [tasksRes, txsRes, logsRes] = await Promise.all([
+               window.monitorClient.from('tasks').select('*').limit(5).order('created_at', {ascending:false}),
+               window.monitorClient.from('transactions').select('*').limit(5).order('created_at', {ascending:false}),
+               window.monitorClient.from('work_logs').select('*').limit(5).order('created_at', {ascending:false})
+           ]);
+
+           let allEvents = [];
+           
+           if(tasksRes.data) {
+               allEvents.push(...tasksRes.data.map(t => ({ 
+                   type: 'Task', 
+                   desc: `Created task "${t.title}"`, 
+                   time: t.created_at, 
+                   color: 'border-indigo-500' 
+               })));
+           }
+
+           if(txsRes.data) {
+               allEvents.push(...txsRes.data.map(t => ({ 
+                   type: 'Finance', 
+                   desc: `Transaction: $${t.amount} (${t.type})`, 
+                   time: t.created_at || new Date().toISOString(), 
+                   color: t.type === 'credit' ? 'border-emerald-500' : 'border-rose-500' 
+               })));
+           }
+
+           if(logsRes.data) {
+               allEvents.push(...logsRes.data.map(l => ({ 
+                   type: 'Work Log', 
+                   desc: `Log: ${l.description} (${l.hours}h)`, 
+                   time: l.created_at || new Date().toISOString(), 
+                   color: 'border-amber-500' 
+               })));
+           }
+
+           // Sort merged events by time (Newest first)
+           allEvents.sort((a,b) => new Date(b.time) - new Date(a.time));
+           allEvents = allEvents.slice(0, 10); // Keep top 10
+
+           document.getElementById('total-events').innerText = allEvents.length;
+
+           const container = document.getElementById('activity-feed');
+           if(allEvents.length === 0) {
+              container.innerHTML = '<div class="pl-10 text-slate-500">No recent activity found.</div>';
+              return;
+           }
+
+           container.innerHTML = allEvents.map(e => `
+              <div class="relative pl-10 fade-in mb-8 last:mb-0">
+                 <div class="absolute left-2 top-1 w-4 h-4 rounded-full bg-[#0a0a0c] border-2 ${e.color} z-10"></div>
+                 <p class="text-sm text-slate-300"><span class="font-bold text-white">${e.type}</span> - ${e.desc}</p>
+                 <p class="text-xs text-slate-600 mt-1">${new Date(e.time).toLocaleString()}</p>
+              </div>
+           `).join('');
+       } catch (err) {
+           console.error("Monitoring Error:", err.message);
+           document.getElementById('activity-feed').innerHTML = '<div class="pl-10 text-rose-500">Error loading system feed.</div>';
+       }
+    }
+
+    // Initial Load
+    fetchFeed();
+    
+    // Refresh every 30 seconds to keep it "Live"
+    setInterval(fetchFeed, 30000);
+</script>
 </body>
 </html>

@@ -6,32 +6,31 @@
     <title>Lumina - Files</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-[#0a0a0c] text-slate-200 font-sans min-h-screen selection:bg-indigo-500/30 overflow-hidden flex">
     
     <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"><div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div><div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div></div>
-
+    
     <nav class="w-20 xl:w-72 border-r border-white/5 bg-black/20 backdrop-blur-xl p-4 flex flex-col gap-6 h-screen z-50">
-        <div class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start">
-             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"><i data-lucide="zap" class="text-white fill-white w-5 h-5"></i></div>
+       <div class="flex items-center gap-3 px-2 mb-2 justify-center xl:justify-start">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20"><i data-lucide="zap" class="text-white fill-white w-5 h-5"></i></div>
             <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block">Lumina</span>
         </div>
         <div class="flex flex-col gap-2 flex-1 overflow-y-auto">
-            <a href="index.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="layout-dashboard" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Dashboard</span></a>
-            <a href="finance.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="trending-up" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Finance</span></a>
-            <a href="mywork.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="kanban-square" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">My Work</span></a>
-            <a href="worklog.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="notebook-pen" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Daily Log</span></a>
-            <a href="files.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 transition-all"><i data-lucide="folder-open" class="w-5 h-5 scale-110"></i><span class="text-sm font-medium hidden xl:block">Company Files</span></a>
-            <a href="passwords.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="lock" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">IDs & Passwords</span></a>
-            <a href="monitoring.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"><i data-lucide="activity" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Monitoring</span></a>
-            <a href="chats.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto transition-all group"><i data-lucide="message-square" class="w-5 h-5 group-hover:scale-110 transition-transform"></i><span class="text-sm font-medium hidden xl:block">Chats</span></a>
+            <a href="index.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Dashboard</span></a>
+            <a href="finance.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="trending-up" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Finance</span></a>
+            <a href="mywork.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="kanban-square" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">My Work</span></a>
+            <a href="worklog.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="notebook-pen" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Daily Log</span></a>
+            <a href="files.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"><i data-lucide="folder-open" class="w-5 h-5 scale-110"></i><span class="text-sm font-medium hidden xl:block">Company Files</span></a>
+            <a href="passwords.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="lock" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">IDs & Passwords</span></a>
+            <a href="monitoring.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"><i data-lucide="activity" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Monitoring</span></a>
+            <a href="chats.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto transition-all"><i data-lucide="message-square" class="w-5 h-5"></i><span class="text-sm font-medium hidden xl:block">Chats</span></a>
         </div>
     </nav>
 
@@ -44,36 +43,115 @@
              <div class="glass-panel rounded-3xl p-8 min-h-[600px]">
                 <div class="flex justify-between items-center mb-8">
                     <div class="flex items-center gap-2 text-sm text-slate-500"><span class="text-indigo-400 font-medium">Root</span><i data-lucide="chevron-right" class="w-4 h-4"></i><span>Team Shared</span></div>
-                    <button class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-xl transition-all flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload</button>
+                    <button onclick="uploadFile()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-xl transition-all flex items-center gap-2"><i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload File</button>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
                     <div class="p-4 bg-white/5 border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 rounded-2xl cursor-pointer transition-all text-center group">
-                        <i data-lucide="folder" class="w-10 h-10 text-indigo-400 mx-auto mb-2 group-hover:scale-110 transition-transform"></i><p class="text-sm font-medium text-slate-200">Marketing</p><p class="text-[10px] text-slate-500">12 items</p>
+                        <i data-lucide="folder" class="w-10 h-10 text-indigo-400 mx-auto mb-2 group-hover:scale-110 transition-transform"></i><p class="text-sm font-medium text-slate-200">Marketing</p>
                     </div>
                      <div class="p-4 bg-white/5 border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 rounded-2xl cursor-pointer transition-all text-center group">
-                        <i data-lucide="folder" class="w-10 h-10 text-indigo-400 mx-auto mb-2 group-hover:scale-110 transition-transform"></i><p class="text-sm font-medium text-slate-200">Finance</p><p class="text-[10px] text-slate-500">5 items</p>
-                    </div>
-                     <div class="p-4 bg-white/5 border border-white/5 hover:bg-white/10 hover:border-indigo-500/30 rounded-2xl cursor-pointer transition-all text-center group">
-                        <i data-lucide="folder" class="w-10 h-10 text-indigo-400 mx-auto mb-2 group-hover:scale-110 transition-transform"></i><p class="text-sm font-medium text-slate-200">Design</p><p class="text-[10px] text-slate-500">8 items</p>
+                        <i data-lucide="folder" class="w-10 h-10 text-indigo-400 mx-auto mb-2 group-hover:scale-110 transition-transform"></i><p class="text-sm font-medium text-slate-200">Finance</p>
                     </div>
                 </div>
 
                 <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Files</h4>
                 <div class="overflow-hidden rounded-2xl border border-white/5">
                     <table class="w-full text-left text-sm text-slate-400">
-                        <thead class="bg-white/5 text-xs font-semibold text-slate-500"><tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Size</th><th class="px-4 py-3">Modified</th><th class="px-4 py-3"></th></tr></thead>
-                        <tbody class="divide-y divide-white/5 bg-black/20">
-                            <tr class="hover:bg-white/5 transition-colors group"><td class="px-4 py-3 flex items-center gap-3 text-white font-medium"><i data-lucide="file-text" class="text-rose-400 w-5 h-5"></i> Handbook_2026.pdf</td><td class="px-4 py-3 text-slate-500">4.2 MB</td><td class="px-4 py-3 text-slate-500">Jan 01</td><td class="px-4 py-3 text-right"><i data-lucide="more-horizontal" class="w-4 h-4 text-slate-600 hover:text-white cursor-pointer"></i></td></tr>
-                             <tr class="hover:bg-white/5 transition-colors group"><td class="px-4 py-3 flex items-center gap-3 text-white font-medium"><i data-lucide="sheet" class="text-emerald-400 w-5 h-5"></i> Q4_Data.xlsx</td><td class="px-4 py-3 text-slate-500">1.8 MB</td><td class="px-4 py-3 text-slate-500">Dec 28</td><td class="px-4 py-3 text-right"><i data-lucide="more-horizontal" class="w-4 h-4 text-slate-600 hover:text-white cursor-pointer"></i></td></tr>
+                        <thead class="bg-white/5 text-xs font-semibold text-slate-500"><tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Size</th><th class="px-4 py-3">Added</th><th class="px-4 py-3"></th></tr></thead>
+                        <tbody id="file-list" class="divide-y divide-white/5 bg-black/20">
+                           <tr><td colspan="4" class="px-4 py-3 text-center">Loading...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </main>
-    <script>
-        lucide.createIcons();
-    </script>
+<script>
+    // --- 1. RENDER ICONS ---
+    lucide.createIcons();
+
+    // --- 2. CONFIGURATION ---
+    const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
+
+    // Use window.fileClient to avoid 'supabase' naming conflict with the global library object
+    if (!window.fileClient) {
+        window.fileClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+
+    // --- 3. LOGIC ---
+    async function fetchFiles() {
+        try {
+            const { data, error } = await window.fileClient
+                .from('company_files')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            const container = document.getElementById('file-list');
+            
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<tr><td colspan="4" class="px-4 py-3 text-center text-slate-500">No files found.</td></tr>';
+                return;
+            }
+
+            container.innerHTML = data.map(f => `
+                <tr class="hover:bg-white/5 transition-colors group">
+                    <td class="px-4 py-3 flex items-center gap-3 text-white font-medium">
+                        <i data-lucide="file-text" class="text-emerald-400 w-5 h-5"></i> ${f.name}
+                    </td>
+                    <td class="px-4 py-3 text-slate-500">${f.size || 'Unknown'}</td>
+                    <td class="px-4 py-3 text-slate-500">${new Date(f.created_at).toLocaleDateString()}</td>
+                    <td class="px-4 py-3 text-right">
+                        <i data-lucide="trash-2" onclick="deleteFile(${f.id})" class="w-4 h-4 text-slate-600 hover:text-rose-400 cursor-pointer"></i>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Re-render icons for dynamic content
+            lucide.createIcons();
+        } catch (err) {
+            console.error("Fetch Error:", err.message);
+        }
+    }
+
+    async function uploadFile() {
+        const name = prompt("Enter file name (e.g. Report.pdf):");
+        if(!name) return;
+        const size = prompt("Enter simulated size (e.g. 2.4 MB):");
+        
+        try {
+            const { error } = await window.fileClient
+                .from('company_files')
+                .insert([{ name, size, type: 'file' }]);
+            
+            if(error) throw error;
+            fetchFiles();
+        } catch (err) {
+            alert('Error uploading: ' + err.message);
+        }
+    }
+
+    window.deleteFile = async (id) => {
+        if(confirm('Delete this file record?')) {
+            try {
+                const { error } = await window.fileClient
+                    .from('company_files')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                fetchFiles();
+            } catch (err) {
+                alert('Error deleting: ' + err.message);
+            }
+        }
+    }
+
+    // Initial Load
+    fetchFiles();
+</script>
 </body>
 </html>

@@ -4,16 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lumina - Dashboard</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script src="https://unpkg.com/lucide@latest"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -25,21 +22,12 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-
-      /* Glass Utilities */
       .glass-panel {
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.08);
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
       }
-      .glass-input {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-      }
-      
-      /* News Item Hover Effect */
       .news-item:hover {
         background: rgba(255, 255, 255, 0.05);
       }
@@ -72,119 +60,66 @@
         </div>
         <span
           class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 hidden xl:block tracking-tight"
+          >Lumina</span
         >
-          Lumina
-        </span>
       </div>
-
       <div
         class="flex flex-col gap-2 w-full flex-1 overflow-y-auto no-scrollbar pr-1"
       >
         <a
           href="index.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+          ><i data-lucide="layout-dashboard" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block">Dashboard</span></a
         >
-          <i
-            data-lucide="layout-dashboard"
-            class="w-5 h-5 flex-shrink-0 scale-110"
-          ></i>
-          <span class="text-sm font-medium hidden xl:block truncate"
-            >Dashboard</span
-          >
-        </a>
-
         <a
           href="finance.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+          ><i data-lucide="trending-up" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block">Finance</span></a
         >
-          <i
-            data-lucide="trending-up"
-            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
-          ></i>
-          <span class="text-sm font-medium hidden xl:block truncate"
-            >Finance</span
-          >
-        </a>
-
         <a
           href="mywork.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+          ><i data-lucide="kanban-square" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block">My Work</span></a
         >
-          <i
-            data-lucide="kanban-square"
-            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
-          ></i>
-          <span class="text-sm font-medium hidden xl:block truncate"
-            >My Work</span
-          >
-        </a>
-
         <a
           href="worklog.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+          ><i data-lucide="notebook-pen" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block">Daily Log</span></a
         >
-          <i
-            data-lucide="notebook-pen"
-            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
-          ></i>
-          <span class="text-sm font-medium hidden xl:block truncate"
-            >Daily Log</span
-          >
-        </a>
-
         <a
           href="files.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
-        >
-          <i
-            data-lucide="folder-open"
-            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
-          ></i>
-          <span class="text-sm font-medium hidden xl:block truncate"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+          ><i data-lucide="folder-open" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block"
             >Company Files</span
-          >
-        </a>
+          ></a
+        >
         <a
           href="passwords.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all group"
-          ><i
-            data-lucide="lock"
-            class="w-5 h-5 group-hover:scale-110 transition-transform"
-          ></i
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+          ><i data-lucide="lock" class="w-5 h-5"></i
           ><span class="text-sm font-medium hidden xl:block"
             >IDs & Passwords</span
           ></a
         >
         <a
           href="monitoring.html"
-          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full transition-all group text-slate-500 hover:bg-white/5 hover:text-slate-300"
-        >
-          <i
-            data-lucide="activity"
-            class="w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-110"
-          ></i>
-          <span class="text-sm font-medium hidden xl:block truncate"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+          ><i data-lucide="activity" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block"
             >Monitoring</span
-          >
-        </a>
-      </div>
-
-      <div
-        class="flex flex-col gap-4 w-full px-1 pb-2 mt-4 border-t border-white/5 pt-4"
-      >
-        <div
-          class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 cursor-pointer transition-colors group"
+          ></a
         >
-          <img
-            src="https://ui-avatars.com/api/?name=Jane+Doe&background=6366f1&color=fff"
-            class="w-10 h-10 rounded-full border border-white/10"
-            alt="User"
-          />
-          <div class="hidden xl:block overflow-hidden">
-            <p class="text-sm font-medium text-white truncate">Jane Doe</p>
-            <p class="text-xs text-slate-500 truncate">Senior Developer</p>
-          </div>
-        </div>
+        <a
+          href="chats.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 mt-auto transition-all"
+          ><i data-lucide="message-square" class="w-5 h-5"></i
+          ><span class="text-sm font-medium hidden xl:block">Chats</span></a
+        >
       </div>
     </nav>
 
@@ -198,24 +133,6 @@
             Loading date...
           </p>
         </div>
-        <div class="flex items-center gap-4">
-          <div class="relative hidden md:block">
-            <i
-              data-lucide="search"
-              class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4"
-            ></i>
-            <input
-              type="text"
-              placeholder="Search..."
-              class="bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500/50 w-64 text-slate-200 placeholder-slate-600"
-            />
-          </div>
-          <div
-            class="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400"
-          >
-            <i data-lucide="bell" class="w-5 h-5"></i>
-          </div>
-        </div>
       </header>
 
       <div
@@ -224,11 +141,11 @@
       >
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           <div
-            class="lg:col-span-1 glass-panel rounded-[32px] p-8 flex flex-col justify-between group hover:bg-white/[0.05] transition-all relative overflow-hidden h-72"
+            class="lg:col-span-1 glass-panel rounded-[32px] p-8 flex flex-col justify-between relative overflow-hidden h-72"
           >
             <div class="flex justify-between items-start z-10">
               <div
-                class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500 group-hover:scale-110 transition-transform"
+                class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500"
               >
                 <i data-lucide="sun" class="w-6 h-6"></i>
               </div>
@@ -242,65 +159,39 @@
                 <p
                   class="text-slate-500 text-xs mt-1 uppercase tracking-widest"
                 >
-                  Delhi, IN
+                  Local Time
                 </p>
               </div>
             </div>
-
             <div class="mt-auto z-10">
               <div class="flex items-end gap-1 mb-4">
                 <span id="dash-temp" class="text-6xl font-bold text-white"
                   >--°</span
-                >
-                <span class="text-slate-400 text-xl mb-3">C</span>
+                ><span class="text-slate-400 text-xl mb-3">C</span>
               </div>
-
               <div
                 class="bg-black/40 rounded-xl p-3 border border-white/5 backdrop-blur-sm"
               >
                 <div class="flex justify-between items-center mb-2">
                   <div class="flex items-center gap-2">
-                    <i data-lucide="wind" class="w-3 h-3 text-slate-400"></i>
-                    <span
+                    <i data-lucide="wind" class="w-3 h-3 text-slate-400"></i
+                    ><span
                       class="text-xs text-slate-300 font-bold uppercase tracking-wider"
                       >Air Quality</span
                     >
                   </div>
                   <span id="aqi-text" class="font-bold text-sm text-slate-400"
-                    >-- US AQI</span
+                    >-- AQI</span
                   >
                 </div>
-
                 <div
                   class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-2"
                 >
                   <div
                     id="aqi-bar"
-                    class="h-full rounded-full transition-all duration-1000 ease-out bg-slate-500"
+                    class="h-full rounded-full bg-slate-500"
                     style="width: 0%"
                   ></div>
-                </div>
-
-                <div class="flex items-start gap-2">
-                  <i
-                    id="aqi-icon"
-                    data-lucide="loader-2"
-                    class="w-3.5 h-3.5 mt-0.5 text-slate-400 shrink-0"
-                  ></i>
-                  <div>
-                    <p
-                      id="aqi-status"
-                      class="text-[11px] font-bold text-slate-200 leading-tight"
-                    >
-                      Loading...
-                    </p>
-                    <p
-                      id="aqi-msg"
-                      class="text-[10px] leading-tight text-slate-400 mt-0.5"
-                    >
-                      Fetching data...
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -317,320 +208,228 @@
             ></div>
             <div class="relative z-10">
               <h2 class="text-2xl font-semibold text-white mb-2">
-                Weekly Goal Progress
+                Task Completion
               </h2>
               <p class="text-slate-400 mb-6">
                 You have completed
-                <span class="text-indigo-400 font-bold">14 tasks</span> this
-                week. Keep up the momentum!
+                <span id="done-count" class="text-indigo-400 font-bold">0</span>
+                tasks total.
               </p>
               <div
                 class="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5"
               >
                 <div
-                  class="h-full w-[70%] bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                  id="progress-bar"
+                  class="h-full w-[0%] bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_15px_rgba(99,102,241,0.5)] transition-all duration-1000"
                 ></div>
               </div>
               <div
                 class="flex justify-between mt-3 text-xs font-bold text-slate-500 uppercase tracking-wider"
               >
-                <span>70% Complete</span>
-                <span>Target: 20</span>
+                <span id="progress-text">0% Complete</span>
+                <span id="total-count">Total: 0</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <div
-            class="glass-panel p-6 rounded-3xl border-l-4 border-indigo-500"
-          >
+          <div class="glass-panel p-6 rounded-3xl border-l-4 border-indigo-500">
             <p class="text-slate-500 text-xs font-bold uppercase mb-2">
               Total Revenue
             </p>
-            <h3 class="text-2xl font-bold text-white">$42,500</h3>
+            <h3 id="stat-revenue" class="text-2xl font-bold text-white">
+              $...
+            </h3>
           </div>
           <div
             class="glass-panel p-6 rounded-3xl border-l-4 border-emerald-500"
           >
             <p class="text-slate-500 text-xs font-bold uppercase mb-2">
-              Active Projects
+              Completed Tasks
             </p>
-            <h3 class="text-2xl font-bold text-white">8</h3>
+            <h3 id="stat-completed" class="text-2xl font-bold text-white">
+              ...
+            </h3>
           </div>
           <div class="glass-panel p-6 rounded-3xl border-l-4 border-rose-500">
             <p class="text-slate-500 text-xs font-bold uppercase mb-2">
               Pending Tasks
             </p>
-            <h3 class="text-2xl font-bold text-white">4</h3>
+            <h3 id="stat-pending" class="text-2xl font-bold text-white">...</h3>
           </div>
           <div class="glass-panel p-6 rounded-3xl border-l-4 border-amber-500">
             <p class="text-slate-500 text-xs font-bold uppercase mb-2">
-              Team Online
+              Work Logs
             </p>
-            <h3 class="text-2xl font-bold text-white">5/12</h3>
+            <h3 id="stat-logs" class="text-2xl font-bold text-white">...</h3>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-1 glass-panel rounded-3xl p-6 flex flex-col h-[500px]">
+          <div
+            class="lg:col-span-1 glass-panel rounded-3xl p-6 flex flex-col h-[500px]"
+          >
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                 <i data-lucide="bell-ring" class="w-5 h-5 text-indigo-400"></i>
-                 Notices
+                <i data-lucide="bell-ring" class="w-5 h-5 text-indigo-400"></i
+                >Notices
               </h3>
-              <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded-full border border-indigo-500/20">3 New</span>
             </div>
-            
             <div class="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-1">
-              <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-amber-500/30 transition-colors">
-                 <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center flex-shrink-0 text-amber-500">
-                       <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                       <p class="text-sm font-semibold text-slate-200">Server Maintenance</p>
-                       <p class="text-xs text-slate-400 mt-1">Scheduled downtime for US-East servers tonight at 02:00 AM UTC.</p>
-                       <p class="text-[10px] text-slate-500 mt-2">Today, 10:00 AM</p>
-                    </div>
-                 </div>
-              </div>
-
-              <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-indigo-500/30 transition-colors">
-                 <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center flex-shrink-0 text-indigo-500">
-                       <i data-lucide="party-popper" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                       <p class="text-sm font-semibold text-slate-200">New Policy Update</p>
-                       <p class="text-xs text-slate-400 mt-1">The Q1 Remote Work Policy has been updated. Please review in Files.</p>
-                       <p class="text-[10px] text-slate-500 mt-2">Yesterday</p>
-                    </div>
-                 </div>
-              </div>
-
-              <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-emerald-500/30 transition-colors">
-                 <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-emerald-500">
-                       <i data-lucide="check-circle-2" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                       <p class="text-sm font-semibold text-slate-200">Quarterly Goals Met!</p>
-                       <p class="text-xs text-slate-400 mt-1">Great job everyone. We exceeded our revenue targets by 15%.</p>
-                       <p class="text-[10px] text-slate-500 mt-2">Jan 02</p>
-                    </div>
-                 </div>
+              <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                <p class="text-sm font-semibold text-slate-200">System Ready</p>
+                <p class="text-xs text-slate-400 mt-1">
+                  Dashboard is now connected to live Supabase data.
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="lg:col-span-2 glass-panel rounded-3xl p-6 flex flex-col h-[500px]">
-             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                   <i data-lucide="globe" class="w-5 h-5 text-emerald-400"></i>
-                   Live Feed: Tech, AI & Stocks
-                </h3>
-                <div class="flex gap-2">
-                   <div id="news-loading" class="flex items-center gap-2 text-xs text-slate-500">
-                      <i data-lucide="loader" class="w-3 h-3 animate-spin"></i> Updating...
-                   </div>
-                   <button onclick="fetchNews()" class="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 transition-colors" title="Refresh">
-                      <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                   </button>
-                </div>
-             </div>
-
-             <div id="news-container" class="flex-1 overflow-y-auto no-scrollbar space-y-3 pr-1">
-                </div>
+          <div
+            class="lg:col-span-2 glass-panel rounded-3xl p-6 flex flex-col h-[500px]"
+          >
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                <i data-lucide="globe" class="w-5 h-5 text-emerald-400"></i>
+                Tech News
+              </h3>
+              <button
+                onclick="fetchNews()"
+                class="p-1.5 hover:bg-white/10 rounded-lg text-slate-400"
+              >
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div
+              id="news-container"
+              class="flex-1 overflow-y-auto no-scrollbar space-y-3 pr-1"
+            ></div>
           </div>
         </div>
-
       </div>
     </main>
 
-    <script>
-      // Init Icons
-      lucide.createIcons();
+<script>
+  lucide.createIcons();
 
-      // Time and Date Logic
-      function updateClock() {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-        });
-        document.getElementById("date-text").innerText = dateStr;
+  // 1. Credentials
+  const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
 
-        const clockEl = document.getElementById("dash-clock");
-        if (clockEl) {
-          clockEl.innerText = now.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-        }
+  // 2. Initialize the client safely
+  // We use window.lumina to avoid any naming conflicts with the global 'supabase' object from the CDN
+  if (!window.lumina) {
+      window.lumina = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+
+  // 3. Fetch Dashboard Stats
+  async function loadStats() {
+    try {
+      // --- Revenue ---
+      const { data: txData, error: txError } = await window.lumina
+        .from('transactions')
+        .select('amount, type');
+      
+      if (txError) throw txError;
+      
+      const revenue = txData
+        ?.filter((t) => t.type === "credit")
+        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0) || 0;
+      
+      document.getElementById("stat-revenue").innerText = `$${revenue.toLocaleString()}`;
+
+      // --- Tasks ---
+      const { data: tasks, error: taskError } = await window.lumina
+        .from("tasks")
+        .select("status");
+      
+      if (taskError) throw taskError;
+
+      const total = tasks?.length || 0;
+      const done = tasks?.filter((t) => t.status === "Done").length || 0;
+      const pending = total - done;
+
+      document.getElementById("stat-completed").innerText = done;
+      document.getElementById("stat-pending").innerText = pending;
+      document.getElementById("done-count").innerText = done;
+      document.getElementById("total-count").innerText = `Total: ${total}`;
+
+      // --- Progress Bar ---
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      document.getElementById("progress-bar").style.width = `${pct}%`;
+      document.getElementById("progress-text").innerText = `${pct}% Complete`;
+
+      // --- Work Logs ---
+      const { count, error: logError } = await window.lumina
+        .from("work_logs")
+        .select("*", { count: "exact", head: true });
+      
+      if (logError) throw logError;
+      document.getElementById("stat-logs").innerText = count || 0;
+
+    } catch (error) {
+      console.error("Supabase Sync Error:", error.message);
+      // Optional: Visual indicator of error
+      document.getElementById("stat-revenue").innerText = "Error";
+    }
+  }
+
+  // 4. Clock & Date
+  function updateClock() {
+    const now = new Date();
+    const dateEl = document.getElementById("date-text");
+    if(dateEl) {
+        dateEl.innerText = now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    }
+    
+    const clockEl = document.getElementById("dash-clock");
+    if (clockEl) {
+        clockEl.innerText = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+  }
+
+  // 5. Weather
+  async function fetchWeatherData() {
+    try {
+      const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m&timezone=auto");
+      const wData = await wRes.json();
+      document.getElementById("dash-temp").innerText = Math.round(wData.current.temperature_2m) + "°";
+
+      const aqiRes = await fetch("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.6139&longitude=77.2090&current=us_aqi&timezone=auto");
+      const aqiData = await aqiRes.json();
+      const aqi = aqiData.current.us_aqi;
+      document.getElementById("aqi-text").innerText = `${aqi} US AQI`;
+      document.getElementById("aqi-bar").style.width = `${Math.min((aqi / 300) * 100, 100)}%`;
+    } catch (e) {
+      console.error("Weather Error:", e);
+    }
+  }
+
+  // 6. News
+  async function fetchNews() {
+    const container = document.getElementById("news-container");
+    try {
+      const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://techcrunch.com/feed/`);
+      const data = await res.json();
+      if (data.status === "ok") {
+        container.innerHTML = data.items.slice(0, 10).map(item => `
+          <a href="${item.link}" target="_blank" class="block p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-all">
+            <h4 class="text-sm font-semibold text-slate-200 mb-1">${item.title}</h4>
+            <div class="text-[10px] text-slate-500">${new Date(item.pubDate).toLocaleTimeString()}</div>
+          </a>`).join("");
       }
-      setInterval(updateClock, 1000);
-      updateClock();
+    } catch (e) {
+       console.error("News Error:", e);
+    }
+  }
 
-      // Weather & AQI Logic
-      async function fetchWeatherData() {
-        try {
-          // Weather
-          const weatherRes = await fetch(
-            "https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m,is_day&timezone=auto"
-          );
-          const weatherData = await weatherRes.json();
-          const temp = weatherData.current.temperature_2m;
-          document.getElementById("dash-temp").innerText =
-            Math.round(temp) + "°";
-
-          // AQI
-          const aqiRes = await fetch(
-            "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.6139&longitude=77.2090&current=us_aqi&timezone=auto"
-          );
-          const aqiData = await aqiRes.json();
-          const aqi = aqiData.current.us_aqi;
-          updateAqiUI(aqi);
-        } catch (e) {
-          console.error("Weather fetch failed", e);
-        }
-      }
-
-      function updateAqiUI(aqi) {
-        const info = getAqiInfo(aqi);
-        const percent = Math.min((aqi / 300) * 100, 100);
-
-        document.getElementById("aqi-text").innerText = `${aqi} US AQI`;
-        document.getElementById(
-          "aqi-text"
-        ).className = `font-bold text-sm ${info.color}`;
-
-        const bar = document.getElementById("aqi-bar");
-        bar.style.width = `${percent}%`;
-        bar.style.backgroundColor = info.hex;
-
-        const icon = document.getElementById("aqi-icon");
-        icon.setAttribute("data-lucide", info.icon);
-        icon.className = `w-3.5 h-3.5 mt-0.5 ${info.color} shrink-0`;
-
-        document.getElementById("aqi-status").innerText = info.status;
-        document.getElementById("aqi-msg").innerText = info.msg;
-
-        lucide.createIcons(); // Refresh icon
-      }
-
-      function getAqiInfo(aqi) {
-        if (!aqi && aqi !== 0)
-          return {
-            color: "text-slate-400",
-            hex: "#94a3b8",
-            status: "Loading...",
-            msg: "Fetching data...",
-            icon: "loader-2",
-          };
-        if (aqi <= 50)
-          return {
-            color: "text-emerald-400",
-            hex: "#34d399",
-            status: "Good",
-            msg: "Air is healthy.",
-            icon: "check-circle-2",
-          };
-        if (aqi <= 100)
-          return {
-            color: "text-yellow-400",
-            hex: "#facc15",
-            status: "Moderate",
-            msg: "Acceptable quality.",
-            icon: "minus-circle",
-          };
-        if (aqi <= 150)
-          return {
-            color: "text-orange-400",
-            hex: "#fb923c",
-            status: "Sensitive",
-            msg: "Sensitive groups: reduce outdoor activity.",
-            icon: "alert-triangle",
-          };
-        if (aqi <= 200)
-          return {
-            color: "text-rose-500",
-            hex: "#f43f5e",
-            status: "Unhealthy",
-            msg: "Wear a mask outdoors.",
-            icon: "alert-octagon",
-          };
-        if (aqi <= 300)
-          return {
-            color: "text-purple-500",
-            hex: "#a855f7",
-            status: "Very Unhealthy",
-            msg: "Mask mandatory.",
-            icon: "skull",
-          };
-        return {
-          color: "text-red-700",
-          hex: "#b91c1c",
-          status: "Hazardous",
-          msg: "Emergency conditions.",
-          icon: "skull",
-        };
-      }
-
-      // --- LIVE REAL NEWS FETCHING LOGIC ---
-      async function fetchNews() {
-         const container = document.getElementById('news-container');
-         const loadingEl = document.getElementById('news-loading');
-         
-         loadingEl.style.display = 'flex';
-         container.style.opacity = '0.5';
-
-         try {
-            // We use rss2json to convert TechCrunch RSS to JSON, avoiding CORS and API Keys.
-            // TechCrunch covers Tech, AI, Startups, and Policies well.
-            const rssUrl = 'https://techcrunch.com/feed/';
-            const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
-            const data = await res.json();
-            
-            if (data.status === 'ok') {
-               let html = '';
-               data.items.slice(0, 10).forEach(item => { // Show top 10 items
-                  // Clean up description if it's too long or has HTML
-                  const tempDiv = document.createElement('div');
-                  tempDiv.innerHTML = item.description;
-                  const shortDesc = tempDiv.textContent.substring(0, 100) + '...';
-                  const date = new Date(item.pubDate).toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' });
-
-                  html += `
-                    <a href="${item.link}" target="_blank" class="news-item block p-4 rounded-xl border border-white/5 transition-all group">
-                        <div class="flex justify-between items-start mb-1">
-                           <h4 class="text-sm font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors line-clamp-1">${item.title}</h4>
-                           <span class="text-[10px] text-slate-500 whitespace-nowrap ml-2 bg-white/5 px-2 py-0.5 rounded">${date}</span>
-                        </div>
-                        <p class="text-xs text-slate-400 line-clamp-2">${shortDesc}</p>
-                        <div class="mt-2 flex gap-2">
-                           ${item.categories.slice(0,3).map(cat => `<span class="text-[10px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/10 uppercase tracking-wide">${cat}</span>`).join('')}
-                        </div>
-                    </a>
-                  `;
-               });
-               container.innerHTML = html;
-            } else {
-               container.innerHTML = '<div class="text-center text-rose-400 p-4">Failed to load news feed.</div>';
-            }
-         } catch (e) {
-            console.error(e);
-            container.innerHTML = '<div class="text-center text-rose-400 p-4">Error fetching news.</div>';
-         } finally {
-            loadingEl.style.display = 'none';
-            container.style.opacity = '1';
-         }
-      }
-
-      // Initial Calls
-      fetchWeatherData();
-      fetchNews(); // Fetch live news on load
-    </script>
+  // Initialize everything
+  setInterval(updateClock, 1000);
+  updateClock();
+  loadStats();
+  fetchWeatherData();
+  fetchNews();
+</script>
   </body>
 </html>
