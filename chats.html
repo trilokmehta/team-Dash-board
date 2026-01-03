@@ -248,132 +248,152 @@
       </div>
     </main>
 
-<script>
-  // 1. Initialize Icons
-  lucide.createIcons();
+    <script>
+      // 1. Initialize Icons
+      lucide.createIcons();
 
-  // 2. Supabase Config
-  const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
+      // 2. Supabase Config
+      const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
 
-  // Renamed to chatClient to avoid 'supabase' naming conflict
-  if (!window.chatClient) {
-      window.chatClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  }
-
-  // 3. Variables
-  const container = document.getElementById("messages-container");
-  const input = document.getElementById("message-input");
-  const MY_NAME = "Jane Doe"; // Hardcoded user for this demo
-
-  // 4. Render Function
-  function renderMessage(msg) {
-    const isMe = msg.is_me || msg.sender === MY_NAME;
-    const time = new Date(msg.created_at).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    // Generate initials safely
-    const initials = msg.sender
-      ? msg.sender.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase()
-      : "??";
-
-    let html = "";
-
-    if (isMe) {
-      html = `
-            <div class="flex gap-4 flex-row-reverse fade-in">
-                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-indigo-500/30 flex-shrink-0">${initials}</div>
-                <div class="text-right max-w-[80%]">
-                    <div class="bg-indigo-600 p-3 rounded-2xl rounded-tr-none text-sm text-white text-left shadow-md break-words">${msg.content}</div>
-                    <span class="text-[10px] text-slate-500 mt-1 block mr-1">${time}</span>
-                </div>
-            </div>`;
-    } else {
-      html = `
-            <div class="flex gap-4 fade-in">
-                <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-purple-500/30 flex-shrink-0">${initials}</div>
-                <div class="max-w-[80%]">
-                    <div class="flex items-baseline gap-2 mb-1 ml-1">
-                        <span class="text-xs font-bold text-slate-300">${msg.sender}</span>
-                    </div>
-                    <div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-slate-200 shadow-md border border-white/5 break-words">${msg.content}</div>
-                    <span class="text-[10px] text-slate-500 mt-1 block ml-1">${time}</span>
-                </div>
-            </div>`;
-    }
-    return html;
-  }
-
-  function scrollToBottom() {
-    container.scrollTop = container.scrollHeight;
-  }
-
-  // 6. Fetch Initial History
-  async function fetchMessages() {
-    try {
-      const { data, error } = await window.chatClient
-        .from("messages")
-        .select("*")
-        .order("created_at", { ascending: true })
-        .limit(50);
-
-      if (error) throw error;
-
-      container.innerHTML = ""; 
-      container.innerHTML += '<div class="flex justify-center mb-4"><span class="text-xs bg-white/5 text-slate-500 px-3 py-1 rounded-full border border-white/5">History</span></div>';
-
-      if (data) {
-          data.forEach((msg) => {
-            container.innerHTML += renderMessage(msg);
-          });
+      // Renamed to chatClient to avoid 'supabase' naming conflict
+      if (!window.chatClient) {
+        window.chatClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
       }
-      scrollToBottom();
-    } catch (err) {
-      console.error("Error fetching messages:", err.message);
-      container.innerHTML = '<div class="text-center text-rose-500 text-sm mt-4">Failed to load chat history.</div>';
-    }
-  }
+      // 1. Initialize variables
+      let currentUser = null;
+      const container = document.getElementById("messages-container");
+      const input = document.getElementById("message-input");
 
-  // 7. Subscribe to Realtime Updates
-  window.chatClient
-    .channel("public:messages")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
-      (payload) => {
-        const newMsg = payload.new;
-        container.innerHTML += renderMessage(newMsg);
-        scrollToBottom();
+      // 2. Modified Fetch User Function
+      async function getCurrentUser() {
+        const {
+          data: { user },
+        } = await window.chatClient.auth.getUser();
+
+        if (user) {
+          // Fetch the profile created by the database trigger
+          const { data: profile, error } = await window.chatClient
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+
+          if (profile) {
+            currentUser = profile;
+            console.log("Logged in as:", currentUser.full_name);
+          }
+        } else {
+          console.warn("No user session. Redirecting to login...");
+          window.location.href = "login.html";
+        }
       }
-    )
-    .subscribe();
 
-  // 8. Send Message Function
-  window.sendMessage = async (e) => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
+      async function fetchMessages() {
+        try {
+          // Query messages and JOIN with profiles to get the role
+          const { data, error } = await window.chatClient
+            .from("messages")
+            .select(
+              `
+                *,
+                profiles (role)
+            `
+            )
+            .order("created_at", { ascending: true });
 
-    input.value = "";
+          if (error) throw error;
 
-    const { error } = await window.chatClient.from("messages").insert([
-      {
-        sender: MY_NAME,
-        content: text,
-        is_me: true,
-      },
-    ]);
+          container.innerHTML = ""; // Clear the "Loading history..." message
 
-    if (error) {
-      alert("Error sending message: " + error.message);
-      input.value = text;
+          if (data && data.length > 0) {
+            data.forEach((msg) => {
+              container.innerHTML += renderMessage(msg);
+            });
+            scrollToBottom();
+          } else {
+            container.innerHTML = `
+                <div class="flex justify-center">
+                    <span class="text-xs text-slate-500 px-3 py-1">No messages yet. Start the conversation!</span>
+                </div>`;
+          }
+        } catch (err) {
+          console.error("Fetch Error:", err.message);
+          container.innerHTML = `<div class="text-rose-500 text-center text-xs">Error loading messages.</div>`;
+        }
+      }
+
+      // Helper to keep the chat scrolled to the latest message
+      function scrollToBottom() {
+        container.scrollTop = container.scrollHeight;
+      }
+      function renderMessage(msg) {
+        const isMe = currentUser && msg.user_id === currentUser.id;
+        // Check role from the joined profile data
+        const role = msg.profiles?.role || "member";
+        const isAdmin = role === "admin";
+
+        return `
+        <div class="flex gap-4 ${isMe ? "flex-row-reverse" : ""} fade-in mb-4">
+            <div class="w-8 h-8 rounded-full ${
+              isAdmin ? "bg-rose-500" : "bg-indigo-500"
+            } flex items-center justify-center text-xs font-bold text-white">
+                ${msg.sender ? msg.sender[0].toUpperCase() : "?"}
+            </div>
+            <div class="${isMe ? "text-right" : ""} max-w-[80%]">
+                <span class="text-[10px] text-slate-500 mb-1 block">
+                    ${msg.sender} ${isAdmin ? "★ Admin" : ""}
+                </span>
+                <div class="${
+                  isMe ? "bg-indigo-600" : "bg-white/10"
+                } p-3 rounded-2xl text-sm text-white">
+                    ${msg.content}
+                </div>
+            </div>
+        </div>`;
+      }
+      // 3. Update Send Message to use currentUser
+      window.sendMessage = async (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+
+        if (!text || !currentUser) return; // Prevent sending if not loaded
+
+        input.value = "";
+
+        const { error } = await window.chatClient.from("messages").insert([
+          {
+            user_id: currentUser.id, // Connects to profiles table
+            sender: currentUser.full_name, // Uses profile name
+            content: text,
+            is_me: true, // Field from your schema
+          },
+        ]);
+
+        if (error) alert("Error: " + error.message);
+      };
+
+      // 4. Proper Initialization Flow
+async function init() {
+    await getCurrentUser();
+    if (currentUser) {
+        fetchMessages();
+
+        // Listen for new messages in real-time
+        window.chatClient
+            .channel('public:messages')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+                fetchMessages(); // Refresh list when a new message arrives
+            })
+            .subscribe();
     }
-  }
+}
 
-  // 9. Initial Load
-  fetchMessages();
-</script>
+      init();
+    </script>
   </body>
 </html>

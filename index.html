@@ -337,7 +337,7 @@
         ?.filter((t) => t.type === "credit")
         .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0) || 0;
       
-      document.getElementById("stat-revenue").innerText = `$${revenue.toLocaleString()}`;
+      document.getElementById("stat-revenue").innerText = `₹${revenue.toLocaleString()}`;
 
       // --- Tasks ---
       const { data: tasks, error: taskError } = await window.lumina

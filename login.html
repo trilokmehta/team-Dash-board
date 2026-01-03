@@ -56,51 +56,75 @@
     </div>
 
     <script>
-      lucide.createIcons();
-      const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // 1. Initialize Icons
+  lucide.createIcons();
 
-      let isSignUp = false;
+  // 2. Supabase Configuration
+  const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
+  
+  // Use a unique name to avoid "Identifier already declared" errors
+  if (!window.authClient) {
+      window.authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
 
-      function toggleMode() {
-        isSignUp = !isSignUp;
-        const title = document.querySelector('h1');
-        const btn = document.getElementById('submit-btn');
-        const toggle = document.getElementById('toggle-text');
-        
-        if (isSignUp) { title.innerText = "Create Account"; btn.innerText = "Sign Up"; toggle.innerText = "Sign In"; } 
-        else { title.innerText = "Welcome Back"; btn.innerText = "Sign In"; toggle.innerText = "Sign Up"; }
-        document.getElementById('error-msg').classList.add('hidden');
+  let isSignUp = false;
+
+  // 3. Define toggleMode globally so HTML onclick can find it
+  window.toggleMode = function() {
+    isSignUp = !isSignUp;
+    const title = document.querySelector('h1');
+    const btn = document.getElementById('submit-btn');
+    const toggle = document.getElementById('toggle-text');
+    const errDiv = document.getElementById('error-msg');
+    
+    if (isSignUp) { 
+        title.innerText = "Create Account"; 
+        btn.innerText = "Sign Up"; 
+        toggle.innerText = "Sign In"; 
+    } else { 
+        title.innerText = "Welcome Back"; 
+        btn.innerText = "Sign In"; 
+        toggle.innerText = "Sign Up"; 
+    }
+    errDiv.classList.add('hidden');
+  };
+
+  // 4. Handle Form Submission
+  document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errDiv = document.getElementById('error-msg');
+    const btn = document.getElementById('submit-btn');
+
+    btn.innerText = "Loading..."; 
+    btn.disabled = true; 
+    errDiv.classList.add('hidden');
+
+    try {
+      let result;
+      if (isSignUp) {
+        // Sign Up flow
+        result = await window.authClient.auth.signUp({ email, password });
+        if (result.error) throw result.error;
+        alert("Account created successfully!");
+        window.location.href = "index.html";
+      } else {
+        // Sign In flow
+        result = await window.authClient.auth.signInWithPassword({ email, password });
+        if (result.error) throw result.error;
+        window.location.href = "index.html";
       }
-
-      document.getElementById('auth-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const errDiv = document.getElementById('error-msg');
-        const btn = document.getElementById('submit-btn');
-
-        btn.innerText = "Loading..."; btn.disabled = true; errDiv.classList.add('hidden');
-
-        try {
-          let error = null;
-          if (isSignUp) {
-            const res = await supabase.auth.signUp({ email, password });
-            error = res.error;
-            if (!error) { alert("Account created! Logging in..."); window.location.href = "index.html"; }
-          } else {
-            const res = await supabase.auth.signInWithPassword({ email, password });
-            error = res.error;
-            if (!error) window.location.href = "index.html";
-          }
-          if (error) throw error;
-        } catch (err) {
-          errDiv.innerText = err.message; errDiv.classList.remove('hidden');
-        } finally {
-          btn.innerText = isSignUp ? "Sign Up" : "Sign In"; btn.disabled = false;
-        }
-      });
+    } catch (err) {
+      errDiv.innerText = err.message; 
+      errDiv.classList.remove('hidden');
+    } finally {
+      btn.innerText = isSignUp ? "Sign Up" : "Sign In"; 
+      btn.disabled = false;
+    }
+  });
+</script>
     </script>
   </body>
 </html>
