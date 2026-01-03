@@ -20,6 +20,7 @@
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
       }
       .glass-input {
         background: rgba(255, 255, 255, 0.05);
@@ -198,10 +199,60 @@
           class="hidden mb-8 glass-panel p-6 rounded-3xl border-l-4 border-indigo-500"
         >
           <h3 class="font-bold text-white mb-4">Add New Transaction</h3>
-          <form
-            onsubmit="addTransaction(event)"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-          >
+          <form onsubmit="addTransaction(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="lg:col-span-2">
+    <label class="block text-xs text-slate-500 mb-1">Description</label>
+    <input type="text" id="desc" placeholder="e.g. Client Payment" required class="glass-input w-full rounded-xl px-3 py-2 text-sm" />
+  </div>
+  <div>
+    <label class="block text-xs text-slate-500 mb-1">Category</label>
+    <select id="category" required class="glass-input w-full rounded-xl px-3 py-2 text-sm">
+      <option value="Food" class="bg-slate-800">Food</option>
+      <option value="Office Rent" class="bg-slate-800">Office Rent</option>
+      <option value="Loan From" class="bg-slate-800">Loan From</option>
+      <option value="Money Lends" class="bg-slate-800">Money Lends</option>
+      <option value="Travel Expenses" class="bg-slate-800">Travel Expenses</option>
+      <option value="Stationary" class="bg-slate-800">Stationary</option>
+      <option value="Miscellaneous" class="bg-slate-800">Miscellaneous</option>
+    </select>
+  </div>
+  <div>
+    <label class="block text-xs text-slate-500 mb-1">Amount (Positive Number)</label>
+    <input type="number" id="amount" placeholder="0.00" required class="glass-input w-full rounded-xl px-3 py-2 text-sm" />
+  </div>
+
+  <div>
+    <label class="block text-xs text-slate-500 mb-1 text-indigo-400 font-bold">Transaction Type</label>
+    <select id="type" class="glass-input w-full rounded-xl px-3 py-2 text-sm border-indigo-500/30">
+      <option value="debit" class="bg-slate-800 text-rose-400">Debit (Expense)</option>
+      <option value="credit" class="bg-slate-800 text-emerald-400">Credit (Income)</option>
+    </select>
+  </div>
+  <div>
+    <label class="block text-xs text-slate-500 mb-1">Payment Mode</label>
+    <select id="mode" class="glass-input w-full rounded-xl px-3 py-2 text-sm">
+      <option value="Cash" class="bg-slate-800">Cash</option>
+      <option value="Bank Transfer" class="bg-slate-800">Bank Transfer</option>
+      <option value="Credit Card" class="bg-slate-800">Credit Card</option>
+      <option value="PayPal" class="bg-slate-800">PayPal</option>
+    </select>
+  </div>
+  <div class="lg:col-span-2">
+    <label class="block text-xs text-slate-500 mb-1">Spender / Payer</label>
+    <input type="text" id="spender" placeholder="Who is this for?" required class="glass-input w-full rounded-xl px-3 py-2 text-sm" />
+  </div>
+
+  <div class="lg:col-span-3">
+    <label class="block text-xs text-slate-500 mb-1">Notes</label>
+    <input type="text" id="notes" placeholder="Additional details..." class="glass-input w-full rounded-xl px-3 py-2 text-sm" />
+  </div>
+  <div class="flex items-end justify-end gap-2">
+    <button type="button" onclick="toggleForm()" class="px-4 py-2 rounded-xl text-slate-400 hover:bg-white/5 text-sm">Cancel</button>
+    <button type="submit" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-600/20">
+      Save Entry
+    </button>
+  </div>
+</form>
             <div class="col-span-2">
               <label class="block text-xs text-slate-500 mb-1"
                 >Description</label
@@ -209,11 +260,41 @@
               <input
                 type="text"
                 id="desc"
-                placeholder="e.g. Server Cost"
+                placeholder="e.g. Weekly Groceries"
                 required
                 class="glass-input w-full rounded-xl px-3 py-2 text-sm"
               />
             </div>
+
+            <div>
+              <label class="block text-xs text-slate-500 mb-1">Category</label>
+              <select
+                id="category"
+                required
+                class="glass-input w-full rounded-xl px-3 py-2 text-sm"
+              >
+                <option value="Food" class="bg-slate-800">Food</option>
+                <option value="Office Rent" class="bg-slate-800">
+                  Office Rent
+                </option>
+                <option value="Loan From" class="bg-slate-800">
+                  Loan From
+                </option>
+                <option value="Money Lends" class="bg-slate-800">
+                  Money Lends
+                </option>
+                <option value="Travel Expenses" class="bg-slate-800">
+                  Travel Expenses
+                </option>
+                <option value="Stationary" class="bg-slate-800">
+                  Stationary
+                </option>
+                <option value="Miscellaneous" class="bg-slate-800">
+                  Miscellaneous
+                </option>
+              </select>
+            </div>
+
             <div>
               <label class="block text-xs text-slate-500 mb-1">Amount</label>
               <input
@@ -223,76 +304,6 @@
                 required
                 class="glass-input w-full rounded-xl px-3 py-2 text-sm"
               />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-500 mb-1">Type</label>
-              <select
-                id="type"
-                class="glass-input w-full rounded-xl px-3 py-2 text-sm"
-              >
-                <option value="debit" class="bg-slate-800">
-                  Debit (Expense)
-                </option>
-                <option value="credit" class="bg-slate-800">
-                  Credit (Income)
-                </option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-slate-500 mb-1"
-                >Payment Mode</label
-              >
-              <select
-                id="mode"
-                class="glass-input w-full rounded-xl px-3 py-2 text-sm"
-              >
-                <option value="Credit Card" class="bg-slate-800">
-                  Credit Card
-                </option>
-                <option value="Bank Transfer" class="bg-slate-800">
-                  Bank Transfer
-                </option>
-                <option value="Cash" class="bg-slate-800">Cash</option>
-                <option value="PayPal" class="bg-slate-800">PayPal</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-slate-500 mb-1"
-                >Spender / Payer</label
-              >
-              <input
-                type="text"
-                id="spender"
-                placeholder="e.g. Jane Doe"
-                required
-                class="glass-input w-full rounded-xl px-3 py-2 text-sm"
-              />
-            </div>
-            <div class="col-span-2">
-              <label class="block text-xs text-slate-500 mb-1">Notes</label>
-              <input
-                type="text"
-                id="notes"
-                placeholder="Optional details..."
-                class="glass-input w-full rounded-xl px-3 py-2 text-sm"
-              />
-            </div>
-            <div
-              class="md:col-span-2 lg:col-span-4 flex justify-end gap-2 mt-2"
-            >
-              <button
-                type="button"
-                onclick="toggleForm()"
-                class="px-4 py-2 rounded-xl text-slate-400 hover:bg-white/5 text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium"
-              >
-                Save Transaction
-              </button>
             </div>
           </form>
         </div>
@@ -418,34 +429,44 @@
       const SUPABASE_KEY =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
       if (!window.financeClient) {
-    window.financeClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
+        window.financeClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
+      }
 
-// --- AUTHENTICATION CHECK (Add to top of script) ---
-async function checkUserSession() {
-    // 1. Initialize a temporary client just for the check
-    const authCheck = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
-    // 2. Get the current user session
-    const { data: { session }, error } = await authCheck.auth.getSession();
+      // --- AUTHENTICATION CHECK (Add to top of script) ---
+      async function checkUserSession() {
+        // 1. Initialize a temporary client just for the check
+        const authCheck = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
 
-    // 3. If no session exists, redirect to login
-    if (!session || error) {
-        console.warn("Unauthorized access. Redirecting to login...");
+        // 2. Get the current user session
+        const {
+          data: { session },
+          error,
+        } = await authCheck.auth.getSession();
+
+        // 3. If no session exists, redirect to login
+        if (!session || error) {
+          console.warn("Unauthorized access. Redirecting to login...");
+          window.location.href = "login.html";
+        } else {
+          console.log("Session active for:", session.user.email);
+        }
+      }
+
+      async function logout() {
+        await window.supabase
+          .createClient(SUPABASE_URL, SUPABASE_KEY)
+          .auth.signOut();
         window.location.href = "login.html";
-    } else {
-        console.log("Session active for:", session.user.email);
-    }
-}
+      }
 
-async function logout() {
-    await window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY).auth.signOut();
-    window.location.href = "login.html";
-}
-
-// Run the check immediately
-checkUserSession();
-
+      // Run the check immediately
+      checkUserSession();
 
       let chartInstance = null;
 
@@ -455,20 +476,20 @@ checkUserSession();
         document.getElementById("entry-form").classList.toggle("hidden");
       }
 
-async function fetchTransactions() {
-  // Changed 'supabase' to 'financeClient'
-  const { data, error } = await window.financeClient
-    .from("transactions")
-    .select("*")
-    .order("date", { ascending: false });
-    
-  if (error) {
-    console.error("Fetch Error:", error.message);
-  } else {
-    updateUI(data);
-    updateChart(data);
-  }
-}
+      async function fetchTransactions() {
+        // Changed 'supabase' to 'financeClient'
+        const { data, error } = await window.financeClient
+          .from("transactions")
+          .select("*")
+          .order("date", { ascending: false });
+
+        if (error) {
+          console.error("Fetch Error:", error.message);
+        } else {
+          updateUI(data);
+          updateChart(data);
+        }
+      }
 
       function updateUI(data) {
         // 1. Calculate Totals
@@ -477,16 +498,16 @@ async function fetchTransactions() {
         const categories = {};
 
         data.forEach((tx) => {
-          const amt = parseFloat(tx.amount);
-          if (tx.type === "credit") {
-            income += amt;
-          } else {
-            expense += amt;
-            // Track category for expenses
-            const cat = tx.description.split(" ")[0] || "Misc"; // Simple heuristic if category col is empty
-            categories[cat] = (categories[cat] || 0) + amt;
-          }
-        });
+  const amt = parseFloat(tx.amount);
+  if (tx.type === "credit") {
+    income += amt;
+  } else {
+    expense += amt;
+    // Use the database category, or "Misc" as a fallback
+    const cat = tx.category || "Miscellaneous"; 
+    categories[cat] = (categories[cat] || 0) + amt;
+  }
+});
 
         document.getElementById(
           "total-income"
@@ -631,22 +652,23 @@ async function fetchTransactions() {
       async function addTransaction(e) {
   e.preventDefault();
   const desc = document.getElementById("desc").value;
+  const category = document.getElementById("category").value; // Get the dropdown value
   const amount = document.getElementById("amount").value;
   const type = document.getElementById("type").value;
   const mode = document.getElementById("mode").value;
   const spender = document.getElementById("spender").value;
   const notes = document.getElementById("notes").value;
 
-  // Changed 'supabase' to 'financeClient'
   const { error } = await window.financeClient.from("transactions").insert([
     {
       description: desc,
+      category: category, // Save category to database
       amount: parseFloat(amount),
       type: type,
       payment_mode: mode,
       spender: spender,
       notes: notes,
-      date: new Date().toISOString() // Good practice to include the date explicitly
+      date: new Date().toISOString()
     },
   ]);
 
