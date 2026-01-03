@@ -121,6 +121,25 @@
           ><span class="text-sm font-medium hidden xl:block">Chats</span></a
         >
       </div>
+      <div class="mt-auto space-y-2 w-full">
+        <a
+          href="chats.html"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all"
+        >
+          <i data-lucide="message-square" class="w-5 h-5"></i>
+          <span class="text-sm font-medium hidden xl:block">Chats</span>
+        </a>
+        <button
+          onclick="logout()"
+          class="flex items-center gap-4 px-4 py-3.5 rounded-2xl w-full text-rose-500 hover:bg-rose-500/10 transition-all group"
+        >
+          <i
+            data-lucide="log-out"
+            class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+          ></i>
+          <span class="text-sm font-medium hidden xl:block">Logout</span>
+        </button>
+      </div>
     </nav>
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
@@ -310,153 +329,221 @@
       </div>
     </main>
 
-<script>
-  lucide.createIcons();
+    <script>
+      lucide.createIcons();
 
-  // 1. Credentials
-  const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
+      // 1. Credentials
+      const SUPABASE_URL = "https://jwrgsmluqhqlxizsuyzc.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3cmdzbWx1cWhxbHhpenN1eXpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczNjQ1OTYsImV4cCI6MjA4Mjk0MDU5Nn0.daGg1TXP3JjrkQeEodEPBY97ThfFRH3cppETLTWUl8Y";
 
-  // 2. Initialize the client safely
-  // We use window.lumina to avoid any naming conflicts with the global 'supabase' object from the CDN
-  if (!window.lumina) {
-      window.lumina = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  }
-
-
-  // --- AUTHENTICATION CHECK (Add to top of script) ---
-async function checkUserSession() {
-    // 1. Initialize a temporary client just for the check
-    const authCheck = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
-    // 2. Get the current user session
-    const { data: { session }, error } = await authCheck.auth.getSession();
-
-    // 3. If no session exists, redirect to login
-    if (!session || error) {
-        console.warn("Unauthorized access. Redirecting to login...");
-        window.location.href = "login.html";
-    } else {
-        console.log("Session active for:", session.user.email);
-    }
-}
-
-
-async function logout() {
-    await window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY).auth.signOut();
-    window.location.href = "login.html";
-}
-
-// Run the check immediately
-checkUserSession();
-
-  // 3. Fetch Dashboard Stats
-  async function loadStats() {
-    try {
-      // --- Revenue ---
-      const { data: txData, error: txError } = await window.lumina
-        .from('transactions')
-        .select('amount, type');
-      
-      if (txError) throw txError;
-      
-      const revenue = txData
-        ?.filter((t) => t.type === "credit")
-        .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0) || 0;
-      
-      document.getElementById("stat-revenue").innerText = `₹${revenue.toLocaleString()}`;
-
-      // --- Tasks ---
-      const { data: tasks, error: taskError } = await window.lumina
-        .from("tasks")
-        .select("status");
-      
-      if (taskError) throw taskError;
-
-      const total = tasks?.length || 0;
-      const done = tasks?.filter((t) => t.status === "Done").length || 0;
-      const pending = total - done;
-
-      document.getElementById("stat-completed").innerText = done;
-      document.getElementById("stat-pending").innerText = pending;
-      document.getElementById("done-count").innerText = done;
-      document.getElementById("total-count").innerText = `Total: ${total}`;
-
-      // --- Progress Bar ---
-      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-      document.getElementById("progress-bar").style.width = `${pct}%`;
-      document.getElementById("progress-text").innerText = `${pct}% Complete`;
-
-      // --- Work Logs ---
-      const { count, error: logError } = await window.lumina
-        .from("work_logs")
-        .select("*", { count: "exact", head: true });
-      
-      if (logError) throw logError;
-      document.getElementById("stat-logs").innerText = count || 0;
-
-    } catch (error) {
-      console.error("Supabase Sync Error:", error.message);
-      // Optional: Visual indicator of error
-      document.getElementById("stat-revenue").innerText = "Error";
-    }
-  }
-
-  // 4. Clock & Date
-  function updateClock() {
-    const now = new Date();
-    const dateEl = document.getElementById("date-text");
-    if(dateEl) {
-        dateEl.innerText = now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-    }
-    
-    const clockEl = document.getElementById("dash-clock");
-    if (clockEl) {
-        clockEl.innerText = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    }
-  }
-
-  // 5. Weather
-  async function fetchWeatherData() {
-    try {
-      const wRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m&timezone=auto");
-      const wData = await wRes.json();
-      document.getElementById("dash-temp").innerText = Math.round(wData.current.temperature_2m) + "°";
-
-      const aqiRes = await fetch("https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.6139&longitude=77.2090&current=us_aqi&timezone=auto");
-      const aqiData = await aqiRes.json();
-      const aqi = aqiData.current.us_aqi;
-      document.getElementById("aqi-text").innerText = `${aqi} US AQI`;
-      document.getElementById("aqi-bar").style.width = `${Math.min((aqi / 300) * 100, 100)}%`;
-    } catch (e) {
-      console.error("Weather Error:", e);
-    }
-  }
-
-  // 6. News
-  async function fetchNews() {
-    const container = document.getElementById("news-container");
-    try {
-      const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://techcrunch.com/feed/`);
-      const data = await res.json();
-      if (data.status === "ok") {
-        container.innerHTML = data.items.slice(0, 10).map(item => `
-          <a href="${item.link}" target="_blank" class="block p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-all">
-            <h4 class="text-sm font-semibold text-slate-200 mb-1">${item.title}</h4>
-            <div class="text-[10px] text-slate-500">${new Date(item.pubDate).toLocaleTimeString()}</div>
-          </a>`).join("");
+      // 2. Initialize the client safely
+      // We use window.lumina to avoid any naming conflicts with the global 'supabase' object from the CDN
+      if (!window.lumina) {
+        window.lumina = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
       }
-    } catch (e) {
-       console.error("News Error:", e);
-    }
-  }
 
-  // Initialize everything
-  setInterval(updateClock, 1000);
-  updateClock();
-  loadStats();
-  fetchWeatherData();
-  fetchNews();
-</script>
+      // --- AUTHENTICATION CHECK (Add to top of script) ---
+      async function checkUserSession() {
+        // 1. Initialize a temporary client just for the check
+        const authCheck = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY
+        );
+
+        // 2. Get the current user session
+        const {
+          data: { session },
+          error,
+        } = await authCheck.auth.getSession();
+
+        // 3. If no session exists, redirect to login
+        if (!session || error) {
+          console.warn("Unauthorized access. Redirecting to login...");
+          window.location.href = "login.html";
+        } else {
+          console.log("Session active for:", session.user.email);
+        }
+      }
+      // Run the check immediately
+      checkUserSession();
+
+      // 1. Updated Logout Function
+      async function logout() {
+        if (confirm("Are you sure you want to log out?")) {
+          const authCheck = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+          );
+          await authCheck.auth.signOut();
+          window.location.href = "login.html"; // Redirect to login
+        }
+      }
+
+
+      // 3. Fetch Dashboard Stats
+      async function loadStats() {
+        try {
+          // --- Revenue ---
+          const { data: txData, error: txError } = await window.lumina
+            .from("transactions")
+            .select("amount, type");
+
+          if (txError) throw txError;
+
+          const revenue =
+            txData
+              ?.filter((t) => t.type === "credit")
+              .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0) || 0;
+
+          document.getElementById(
+            "stat-revenue"
+          ).innerText = `₹${revenue.toLocaleString()}`;
+
+          // --- Tasks ---
+          const { data: tasks, error: taskError } = await window.lumina
+            .from("tasks")
+            .select("status");
+
+          if (taskError) throw taskError;
+
+          const total = tasks?.length || 0;
+          const done = tasks?.filter((t) => t.status === "Done").length || 0;
+          const pending = total - done;
+
+          document.getElementById("stat-completed").innerText = done;
+          document.getElementById("stat-pending").innerText = pending;
+          document.getElementById("done-count").innerText = done;
+          document.getElementById("total-count").innerText = `Total: ${total}`;
+
+          // --- Progress Bar ---
+          const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+          document.getElementById("progress-bar").style.width = `${pct}%`;
+          document.getElementById(
+            "progress-text"
+          ).innerText = `${pct}% Complete`;
+
+          // --- Work Logs ---
+          const { count, error: logError } = await window.lumina
+            .from("work_logs")
+            .select("*", { count: "exact", head: true });
+
+          if (logError) throw logError;
+          document.getElementById("stat-logs").innerText = count || 0;
+        } catch (error) {
+          console.error("Supabase Sync Error:", error.message);
+          // Optional: Visual indicator of error
+          document.getElementById("stat-revenue").innerText = "Error";
+        }
+      }
+
+      // 4. Clock & Date
+      function updateClock() {
+        const now = new Date();
+        const dateEl = document.getElementById("date-text");
+        if (dateEl) {
+          dateEl.innerText = now.toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          });
+        }
+
+        const clockEl = document.getElementById("dash-clock");
+        if (clockEl) {
+          clockEl.innerText = now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+      }
+
+      // 5. Weather
+      async function fetchWeatherData() {
+        try {
+          const wRes = await fetch(
+            "https://api.open-meteo.com/v1/forecast?latitude=28.6139&longitude=77.2090&current=temperature_2m&timezone=auto"
+          );
+          const wData = await wRes.json();
+          document.getElementById("dash-temp").innerText =
+            Math.round(wData.current.temperature_2m) + "°";
+
+          const aqiRes = await fetch(
+            "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=28.6139&longitude=77.2090&current=us_aqi&timezone=auto"
+          );
+          const aqiData = await aqiRes.json();
+          const aqi = aqiData.current.us_aqi;
+          document.getElementById("aqi-text").innerText = `${aqi} US AQI`;
+          document.getElementById("aqi-bar").style.width = `${Math.min(
+            (aqi / 300) * 100,
+            100
+          )}%`;
+        } catch (e) {
+          console.error("Weather Error:", e);
+        }
+      }
+
+      // 6. News
+
+      async function fetchNews() {
+  const container = document.getElementById("news-container");
+  container.innerHTML =
+    '<div class="text-center py-10 text-slate-500 text-xs animate-pulse">Fetching live updates...</div>';
+
+  try {
+    // We add ?t= + Date.now() as a 'cache buster' to force fresh data
+    const cacheBuster = Date.now();
+    const rssUrl = encodeURIComponent("https://techcrunch.com/feed/");
+    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&t=${cacheBuster}`;
+
+    const res = await fetch(apiUrl);
+    
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      container.innerHTML = data.items
+        .slice(0, 8)
+        .map((item) => `
+          <a href="${item.link}" target="_blank" class="block p-4 rounded-xl border border-white/5 news-item transition-all fade-in">
+            <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">${
+                  item.categories[0] || "Tech"
+                }</span>
+                <span class="text-[10px] text-slate-500">${new Date(
+                  item.pubDate
+                ).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}</span>
+            </div>
+            <h4 class="text-sm font-semibold text-slate-200 leading-snug hover:text-indigo-400 transition-colors">${
+              item.title
+            }</h4>
+          </a>`
+        )
+        .join("");
+    }
+  } catch (e) {
+    console.error("News Error:", e);
+    container.innerHTML = '<div class="text-rose-400 text-xs p-4">Unable to load news feed.</div>';
+  }
+}
+      // 3. Initialize Live Updates
+      // Refresh stats and news every 60 seconds
+      setInterval(loadStats, 60000);
+      setInterval(fetchNews, 60000);
+
+      // Initialize everything
+      setInterval(updateClock, 1000);
+      updateClock();
+      loadStats();
+      fetchWeatherData();
+      fetchNews();
+    </script>
   </body>
 </html>
