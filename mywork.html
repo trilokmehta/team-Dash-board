@@ -203,6 +203,26 @@
       window.taskClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   }
 
+  // --- AUTHENTICATION CHECK (Add to top of script) ---
+async function checkUserSession() {
+    // 1. Initialize a temporary client just for the check
+    const authCheck = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    // 2. Get the current user session
+    const { data: { session }, error } = await authCheck.auth.getSession();
+
+    // 3. If no session exists, redirect to login
+    if (!session || error) {
+        console.warn("Unauthorized access. Redirecting to login...");
+        window.location.href = "login.html";
+    } else {
+        console.log("Session active for:", session.user.email);
+    }
+}
+
+// Run the check immediately
+checkUserSession();
+
   // --- 3. RENDER LOGIC ---
   function renderTasks(tasks) {
     const card = (t) => `
